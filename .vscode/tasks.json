@@ -3,7 +3,7 @@
         {
             "type": "cppbuild",
             "label": "C Main build",
-            "command": "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+            "command": "gcc.exe",
             "args": [
                 "-fdiagnostics-color=always",
                 "-Wall",
@@ -26,7 +26,7 @@
         {
             "type": "cppbuild",
             "label": "C Tests build",
-            "command": "C:\\msys64\\ucrt64\\bin\\gcc.exe",
+            "command": "gcc.exe",
             "args": [
                 "-fdiagnostics-color=always",
                 "-Wall",
