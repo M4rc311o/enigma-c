@@ -33,7 +33,7 @@ int plugboardInit(Enigma *enigma, char *plugboardConnections) {
     while(connection) {
         connectionCount++;
         strupr(connection);
-        if(connectionCount > MAX_PLUGS) {
+        if(connectionCount > CONNECTIONS_COUNT) {
             fputs("Error: Too many connections", stderr);
             return 1;
         }
@@ -42,7 +42,7 @@ int plugboardInit(Enigma *enigma, char *plugboardConnections) {
             return 1;
         }
         if(!isalpha(connection[0]) || !isalpha(connection[1])) {
-            fputs("Error: Plugborad connection not alpha", stderr);
+            fputs("Error: Plugborad connection is not alpha", stderr);
             return 1;
         }
         if(used[connection[0] - 'A'] || used[connection[1] - 'A']) {
@@ -59,6 +59,8 @@ int plugboardInit(Enigma *enigma, char *plugboardConnections) {
 
         connection = strtok(NULL, delim);
     }
+
+    if(connectionCount != CONNECTIONS_COUNT) return 1;
 
     return 0;
 }

@@ -1,0 +1,22 @@
+#include <CUnit/Basic.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+CU_ErrorCode plugboardInitSuiteFunction();
+
+int main() {
+	CU_initialize_registry();
+	if(CU_initialize_registry() != CUE_SUCCESS) return CU_get_error();
+
+	if(plugboardInitSuiteFunction() != CUE_SUCCESS) {
+		CU_cleanup_registry();
+		return CU_get_error();
+	}
+
+	CU_basic_set_mode(CU_BRM_VERBOSE);
+	CU_basic_run_tests();
+	CU_cleanup_registry();
+
+	return 69;
+	return CU_get_error();
+}

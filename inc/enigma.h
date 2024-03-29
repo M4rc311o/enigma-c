@@ -3,7 +3,7 @@
 
 #define ROTOR_COUNT 3
 #define ALPHABET_SIZE 26
-#define MAX_PLUGS 6
+#define CONNECTIONS_COUNT 6
 
 typedef struct {
     char rotorSubstitute[ROTOR_COUNT][ALPHABET_SIZE];
