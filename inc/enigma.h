@@ -3,17 +3,18 @@
 
 #define ROTOR_COUNT 3
 #define ALPHABET_SIZE 26
+#define MAX_PLUGS 6
 
 typedef struct {
-    unsigned char rotorSubstitute[ROTOR_COUNT][ALPHABET_SIZE];
-    unsigned char rotorInverseSubstitute[ROTOR_COUNT][ALPHABET_SIZE];
-    unsigned char reflectorSubstitute[ALPHABET_SIZE];
-    unsigned char plugboardSubstitute[ALPHABET_SIZE];
-    unsigned char ringPosition[ROTOR_COUNT];
-    unsigned char rotorPosition[ROTOR_COUNT];
+    char rotorSubstitute[ROTOR_COUNT][ALPHABET_SIZE];
+    char rotorInverseSubstitute[ROTOR_COUNT][ALPHABET_SIZE];
+    char reflectorSubstitute[ALPHABET_SIZE];
+    char plugboardSubstitute[ALPHABET_SIZE];
+    char ringPosition[ROTOR_COUNT];
+    char rotorPosition[ROTOR_COUNT];
 } Enigma;
 
-Enigma *enigmaInit();
+Enigma *enigmaInit(char *plugboardConnections);
 void enigmaFree(Enigma *enigma);
 
 #endif /* ENIGMA_H_ */
