@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 int plugboardInit(Enigma *enigma, char *plugboardConnections);
 
@@ -23,7 +24,7 @@ int plugboardInit(Enigma *enigma, char *plugboardConnections) {
     char *connection;
     int connectionCount = 0;
     const char delim[] = " ";
-    char used[ALPHABET_SIZE] = { 0 };
+    bool used[ALPHABET_SIZE] = { false };
     char tmpStr[strlen(plugboardConnections) + 1];
     strcpy(tmpStr, plugboardConnections);
     for(int i = 0; i < ALPHABET_SIZE; i++) enigma->plugboardSubstitute[i] = i;
@@ -53,8 +54,8 @@ int plugboardInit(Enigma *enigma, char *plugboardConnections) {
         int plug2 = connection[1] - 'A';
         enigma->plugboardSubstitute[plug1] = plug2;
         enigma->plugboardSubstitute[plug2] = plug1;
-        used[plug1] = 1;
-        used[plug2] = 1;
+        used[plug1] = true;
+        used[plug2] = true;
 
         connection = strtok(NULL, delim);
     }
