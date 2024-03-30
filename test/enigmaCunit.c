@@ -17,6 +17,5 @@ int main() {
 	CU_basic_run_tests();
 	CU_cleanup_registry();
 
-	return 69;
 	return CU_get_error();
 }
