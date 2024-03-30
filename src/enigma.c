@@ -60,7 +60,10 @@ int plugboardInit(Enigma *enigma, char *plugboardConnections) {
         connection = strtok(NULL, delim);
     }
 
-    if(connectionCount != CONNECTIONS_COUNT) return 1;
+    if(connectionCount != CONNECTIONS_COUNT) {
+        fputs("Error: Too few connections", stderr);
+        return 1;
+    }
 
     return 0;
 }
