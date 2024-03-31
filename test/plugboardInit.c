@@ -37,7 +37,7 @@ void connectionsCountTest() {
 }
 
 void repeatedConnectionsTest() {
-    Enigma *enigma = enigmaInit("AA AB CA BD DB EF");
+    Enigma *enigma = enigmaInit("AB CD EF GH IJ KL MN");
     CU_ASSERT_PTR_NULL(enigma);
     enigmaFree(enigma);
 

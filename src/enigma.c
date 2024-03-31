@@ -45,7 +45,7 @@ int plugboardInit(Enigma *enigma, char *plugboardConnections) {
             fputs("Error: Plugborad connection is not alpha", stderr);
             return 1;
         }
-        if(used[connection[0] - 'A'] || used[connection[1] - 'A']) {
+        if(used[connection[0] - 'A'] || used[connection[1] - 'A'] || (connection[0] - 'A') == (connection[1] - 'A')) {
             fputs("Error: Connection already used", stderr);
             return 1;
         }
