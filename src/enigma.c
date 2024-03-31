@@ -1,4 +1,5 @@
 #include "../inc/enigma.h"
+#include "../inc/enigmaErrors.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -7,11 +8,25 @@
 
 int plugboardInit(Enigma *enigma, char *plugboardConnections);
 
+static ENIGMA_ERROR lastEnigmaError = ENIGMA_SUCCESS;
+
+ENIGMA_ERROR getLastEnigmaError(){
+    return lastEnigmaError;
+}
+
+const char *getEnigmaErrorStr(ENIGMA_ERROR enigmaError) {
+    if(enigmaError < 0 || enigmaError >= sizeof(errorStrings)/sizeof(errorStrings[0])) {
+        lastEnigmaError = ENIGMA_ERROR_OUT_OF_RANGE;
+        return NULL;
+    }
+    return errorStrings[enigmaError];
+}
+
 Enigma *enigmaInit(char *plugboardConnections) {
     Enigma *enigma;
     enigma = (Enigma*)malloc(sizeof(Enigma));
     if(enigma == NULL) return NULL;
-    if(plugboardInit(enigma, plugboardConnections)) return NULL;
+    if(plugboardInit(enigma, plugboardConnections) != ENIGMA_SUCCESS) return NULL;
     //TODO: Initilize rest of the Enigma structure
     return enigma;
 }
@@ -20,7 +35,7 @@ void enigmaFree(Enigma *enigma) {
     free(enigma);
 }
 
-int plugboardInit(Enigma *enigma, char *plugboardConnections) {
+ENIGMA_ERROR plugboardInit(Enigma *enigma, char *plugboardConnections) {
     char *connection;
     int connectionCount = 0;
     const char delim[] = " ";
@@ -34,20 +49,20 @@ int plugboardInit(Enigma *enigma, char *plugboardConnections) {
         connectionCount++;
         strupr(connection);
         if(connectionCount > CONNECTIONS_COUNT) {
-            fputs("Error: Too many connections", stderr);
-            return 1;
+            lastEnigmaError = ENIGMA_PLUGBOARD_TOO_MANY_CONNECTIONS;
+            return lastEnigmaError;
         }
         if(strlen(connection) != 2) {
-            fputs("Error: Plugborad connection wrong length", stderr);
-            return 1;
+            lastEnigmaError = ENIGMA_PLUGBOARD_WRONG_CONNECTION_LENGTH;
+            return lastEnigmaError;
         }
         if(!isalpha(connection[0]) || !isalpha(connection[1])) {
-            fputs("Error: Plugborad connection is not alpha", stderr);
-            return 1;
+            lastEnigmaError = ENIGMA_PLUGBOARD_CONNECTION_NOT_ALPHA;
+            return lastEnigmaError;
         }
         if(used[connection[0] - 'A'] || used[connection[1] - 'A'] || (connection[0] - 'A') == (connection[1] - 'A')) {
-            fputs("Error: Connection already used", stderr);
-            return 1;
+            lastEnigmaError = ENIGMA_PLUGBOARD_CONNECTION_ALREADY_USED;
+            return lastEnigmaError;
         }
         
         int plug1 = connection[0] - 'A';
@@ -61,9 +76,10 @@ int plugboardInit(Enigma *enigma, char *plugboardConnections) {
     }
 
     if(connectionCount != CONNECTIONS_COUNT) {
-        fputs("Error: Too few connections", stderr);
-        return 1;
+        lastEnigmaError = ENIGMA_PLUGBOARD_TOO_FEW_CONNECTIONS;
+        return lastEnigmaError;
     }
 
-    return 0;
+    lastEnigmaError = ENIGMA_SUCCESS;
+    return lastEnigmaError;
 }
