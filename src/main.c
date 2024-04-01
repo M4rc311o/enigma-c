@@ -7,7 +7,7 @@ int main()
 
     Enigma *enigma;
     //probably better to add rotorPosition and ringPosition separately
-    enigma = enigmaInit("AB CD EF GH IJ KL","D","A");
+    enigma = enigmaInit("AB CD EF GH IJ KL","d","A");
     if (enigma != NULL)
         enigmaFree(enigma);
     return 0;

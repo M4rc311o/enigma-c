@@ -169,7 +169,8 @@ int reflectorInit(Enigma *enigma, char *reflectorConnections ){
 
 char correctInput(char *input) {
  int length = strlen(input);
-  if (length != 1 || !isalpha(input[0])) {
+ //capital letter
+  if (length != 1 || !isalpha(input[0]) || !isupper(input[0])) {
     return 1;
   }        
 
