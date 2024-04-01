@@ -12,7 +12,7 @@
 
 #define ENIGMA_ERROR_OUT_OF_RANGE 6
 
-const char *errorStrings[] = 
+const char *errorStrings[] =
 {
     "ENIGMA_SUCCESS",
     "ENIGMA_PLUGBOARD_TOO_MANY_CONNECTIONS",

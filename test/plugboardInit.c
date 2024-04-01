@@ -46,7 +46,7 @@ void repeatedConnectionsTest() {
     enigmaFree(enigma);
 }
 
-void multiConnectionsTest(){
+void multiConnectionsTest() {
     Enigma *enigma = enigmaInit("AB CDE FG HI JK LM");
     CU_ASSERT_PTR_NULL(enigma);
     enigmaFree(enigma);
@@ -54,11 +54,11 @@ void multiConnectionsTest(){
 
 CU_ErrorCode plugboardInitSuiteFunction() {
     CU_pSuite plugboardInitSuite = NULL;
-	plugboardInitSuite = CU_add_suite("Plugboard initialization", NULL, NULL);
-	if(plugboardInitSuite == NULL) {
-		CU_cleanup_registry();
-		return CU_get_error();
-	}
+    plugboardInitSuite = CU_add_suite("Plugboard initialization", NULL, NULL);
+    if(plugboardInitSuite == NULL) {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
 
     if(CU_add_test(plugboardInitSuite, "Character casing", charCasingTest) == NULL) {
         CU_cleanup_registry();

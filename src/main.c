@@ -8,5 +8,5 @@ int main() {
     if(enigma != NULL) enigmaFree(enigma);
     else printf(getEnigmaErrorStr(getLastEnigmaError()));
 
-    return 0;    
+    return 0;
 }
