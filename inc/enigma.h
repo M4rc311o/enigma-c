@@ -14,7 +14,7 @@ typedef struct {
     char rotorPosition[ROTOR_COUNT];
 } Enigma;
 
-Enigma *enigmaInit(char *plugboardConnections);
+Enigma *enigmaInit(char *plugboardConnections,char *rotorP, char *ringP);
 void enigmaFree(Enigma *enigma);
 
 #endif /* ENIGMA_H_ */

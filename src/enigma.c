@@ -7,6 +7,9 @@
 
 int plugboardInit(Enigma *enigma, char *plugboardConnections);
 int rotorInit(Enigma *enigma, int rotorIndex, char *rotorWiringConnections, char *rotorP, char *ringP);
+int reflectorInit(Enigma *enigma, char *reflectorConnections);
+char correctInput(char *input);
+
 
 char rotorI[ALPHABET_SIZE] = {'E', 'K', 'M', 'F', 'L', 'G', 'D', 'Q', 'V', 'Z', 'N', 'T', 'O', 'W', 'Y', 'H', 'X', 'U', 'S', 'P', 'A', 'I', 'B', 'R', 'C', 'J'};
 char rotorII[ALPHABET_SIZE] = {'A', 'J', 'D', 'K', 'S', 'I', 'R', 'U', 'X', 'B', 'L', 'H', 'W', 'T', 'M', 'C', 'Q', 'G', 'Z', 'N', 'P', 'Y', 'F', 'V', 'O', 'E'};
@@ -14,7 +17,7 @@ char rotorIII[ALPHABET_SIZE] = {'B', 'D', 'F', 'H', 'J', 'L', 'C', 'P', 'R', 'T'
 char rotorIV[ALPHABET_SIZE] = {'E', 'S', 'O', 'V', 'P', 'Z', 'J', 'A', 'Y', 'Q', 'U', 'I', 'R', 'H', 'X', 'L', 'N', 'F', 'T', 'G', 'K', 'D', 'C', 'M', 'W', 'B'};
 char rotorV[ALPHABET_SIZE] = {'V', 'Z', 'B', 'R', 'G', 'I', 'T', 'Y', 'U', 'P', 'S', 'D', 'N', 'H', 'L', 'X', 'A', 'W', 'M', 'J', 'Q', 'O', 'F', 'E', 'C', 'K'};
 
-Enigma *enigmaInit(char *plugboardConnections)
+Enigma *enigmaInit(char *plugboardConnections, char *rotorP, char *ringP)
 {
     Enigma *enigma;
     enigma = (Enigma *)malloc(sizeof(Enigma));
@@ -23,11 +26,11 @@ Enigma *enigmaInit(char *plugboardConnections)
     if (plugboardInit(enigma, plugboardConnections))
         return NULL;
 
-    if (rotorInit(enigma, 1, rotorI, 'D', 'A'))
+    if (rotorInit(enigma, 0, rotorI, rotorP, ringP))
         return NULL;
-    if (rotorInit(enigma, 2, rotorII, 'A', 'A'))
+    if (rotorInit(enigma, 1, rotorII, rotorP, ringP))
         return NULL;
-    if (rotorInit(enigma, 3, rotorIII, 'A', 'A'))
+    if (rotorInit(enigma, 2, rotorIII, rotorP, ringP))
         return NULL;
     // TODO: Initilize rest of the Enigma structure
     return enigma;
@@ -97,7 +100,7 @@ int plugboardInit(Enigma *enigma, char *plugboardConnections)
 int rotorInit(Enigma *enigma, int rotorIndex, char *rotorWiringConnections, char *rotorP, char *ringP)
 
 {
-    if (rotorIndex < 0 || rotorIndex > ROTOR_COUNT)
+    if (rotorIndex < 0 || rotorIndex >= ROTOR_COUNT)
     {
         fputs("Error: Invalid rotor number", stderr);
         return 1;
@@ -107,7 +110,7 @@ int rotorInit(Enigma *enigma, int rotorIndex, char *rotorWiringConnections, char
     {
         if (rotorWiringConnections[i] < 'A' || rotorWiringConnections[i] > 'Z')
         {
-            fputs("Error: Invalid rotor wiring connections\n", stderr);
+            fputs("Error: Invalid rotor wiring connections", stderr);
             return 1;
         }
     }
@@ -126,9 +129,28 @@ int rotorInit(Enigma *enigma, int rotorIndex, char *rotorWiringConnections, char
     }
 
     // ring and rotor position - might be randomized
-    enigma->rotorPosition[rotorIndex] = rotorP - 'A';
-    enigma->ringPosition[rotorIndex] = ringP - 'A';
+    char cRotorP = correctInput(rotorP);
+    char cRingP = correctInput(ringP);
+    if(cRotorP !=1 && cRingP != 1){
+    enigma->rotorPosition[rotorIndex] = cRotorP - 'A';
+    enigma->ringPosition[rotorIndex] = cRingP - 'A';
+    }else{
+        fputs("Error: Invalid starting position", stderr);
+            return 1;
+    }
 
-    //reflector
+
+    
     return 0;
 }
+
+char correctInput(char *input) {
+ int length = strlen(&input);
+ char upper = toupper(input);
+  if (length != 1 || isalpha(upper)==0) {
+    return 1;
+  }        
+
+  return input;
+}
+
