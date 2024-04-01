@@ -18,6 +18,7 @@ typedef int ENIGMA_ERROR;
 
 ENIGMA_ERROR getLastEnigmaError();
 const char *getEnigmaErrorStr(ENIGMA_ERROR enigmaError);
+
 Enigma *enigmaInit(char *plugboardConnections);
 void enigmaFree(Enigma *enigma);
 

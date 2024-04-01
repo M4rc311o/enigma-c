@@ -10,8 +10,21 @@ int plugboardInit(Enigma *enigma, char *plugboardConnections);
 
 static ENIGMA_ERROR lastEnigmaError = ENIGMA_SUCCESS;
 
+const char *errorStrings[] =
+{
+    "ENIGMA_SUCCESS",
+    "ENIGMA_PLUGBOARD_TOO_MANY_CONNECTIONS",
+    "ENIGMA_PLUGBOARD_WRONG_CONNECTION_LENGTH",
+    "ENIGMA_PLUGBOARD_CONNECTION_NOT_ALPHA",
+    "ENIGMA_PLUGBOARD_CONNECTION_ALREADY_USED",
+    "ENIGMA_PLUGBOARD_TOO_FEW_CONNECTIONS",
+    "ENIGMA_ERROR_OUT_OF_RANGE"
+};
+
 ENIGMA_ERROR getLastEnigmaError() {
-    return lastEnigmaError;
+    ENIGMA_ERROR err = lastEnigmaError;
+    lastEnigmaError = ENIGMA_SUCCESS;
+    return err;
 }
 
 const char *getEnigmaErrorStr(ENIGMA_ERROR enigmaError) {
