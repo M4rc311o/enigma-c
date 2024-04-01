@@ -60,7 +60,7 @@
                 "${workspaceRoot}\\src\\enigma.c",
                 "${workspaceRoot}\\test\\*.c",
                 "-o",
-                "${workspaceRoot}\\TestsDebug\\enigmatests.exe",
+                "${workspaceRoot}\\TestsCoverageDebug\\enigmatests.exe",
                 "-lcunit"
             ],
             "options": {

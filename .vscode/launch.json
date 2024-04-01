@@ -56,7 +56,7 @@
             "name": "C Tests Coverage build and debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}\\TestsDebug\\enigmatests.exe",
+            "program": "${workspaceRoot}\\TestsCoverageDebug\\enigmatests.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
