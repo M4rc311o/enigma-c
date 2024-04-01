@@ -11,16 +11,7 @@ int reflectorInit(Enigma *enigma, char *reflectorConnections);
 char correctInput(char *input);
 
 
-char rotorI[ALPHABET_SIZE] = {'E', 'K', 'M', 'F', 'L', 'G', 'D', 'Q', 'V', 'Z', 'N', 'T', 'O', 'W', 'Y', 'H', 'X', 'U', 'S', 'P', 'A', 'I', 'B', 'R', 'C', 'J'};
-char rotorII[ALPHABET_SIZE] = {'A', 'J', 'D', 'K', 'S', 'I', 'R', 'U', 'X', 'B', 'L', 'H', 'W', 'T', 'M', 'C', 'Q', 'G', 'Z', 'N', 'P', 'Y', 'F', 'V', 'O', 'E'};
-char rotorIII[ALPHABET_SIZE] = {'B', 'D', 'F', 'H', 'J', 'L', 'C', 'P', 'R', 'T', 'X', 'V', 'Z', 'N', 'Y', 'E', 'I', 'W', 'G', 'A', 'K', 'M', 'U', 'S', 'Q', 'O'};
-char rotorIV[ALPHABET_SIZE] = {'E', 'S', 'O', 'V', 'P', 'Z', 'J', 'A', 'Y', 'Q', 'U', 'I', 'R', 'H', 'X', 'L', 'N', 'F', 'T', 'G', 'K', 'D', 'C', 'M', 'W', 'B'};
-char rotorV[ALPHABET_SIZE] = {'V', 'Z', 'B', 'R', 'G', 'I', 'T', 'Y', 'U', 'P', 'S', 'D', 'N', 'H', 'L', 'X', 'A', 'W', 'M', 'J', 'Q', 'O', 'F', 'E', 'C', 'K'};
-char reflectorA[ALPHABET_SIZE] = {'E', 'J', 'M', 'Z', 'A', 'L', 'Y', 'X', 'V', 'B', 'W', 'F', 'C', 'R', 'Q', 'U', 'O', 'N', 'T', 'S', 'P', 'I', 'K', 'H', 'G', 'D'};
-char reflectorB[ALPHABET_SIZE] = {'Y', 'R', 'U', 'H', 'Q', 'S', 'L', 'D', 'P', 'X', 'N', 'G', 'O', 'K', 'M', 'I', 'E', 'B', 'F', 'Z', 'C', 'W', 'V', 'J', 'A', 'T'};
-char reflectorC[ALPHABET_SIZE] = {'F', 'V', 'P', 'J', 'I', 'A', 'O', 'Y', 'E', 'D', 'R', 'Z', 'X', 'W', 'G', 'C', 'T', 'K', 'U', 'Q', 'S', 'B', 'N', 'M', 'H', 'L'};
-
-Enigma *enigmaInit(char *plugboardConnections, char *rotorP, char *ringP)
+Enigma *enigmaInit(char *plugboardConnections, char *firstRotor, char *rotorP1, char *ringP1, char *secondRotor, char *rotorP2, char *ringP2, char *thirdRotor, char *rotorP3, char *ringP3, char *reflector)
 {
     Enigma *enigma;
     enigma = (Enigma *)malloc(sizeof(Enigma));
@@ -29,13 +20,13 @@ Enigma *enigmaInit(char *plugboardConnections, char *rotorP, char *ringP)
     if (plugboardInit(enigma, plugboardConnections))
         return NULL;
 
-    if (rotorInit(enigma, 0, rotorI, rotorP, ringP))
+    if (rotorInit(enigma, 0, firstRotor, rotorP1, ringP1))
         return NULL;
-    if (rotorInit(enigma, 1, rotorII, rotorP, ringP))
+    if (rotorInit(enigma, 1, secondRotor, rotorP2, ringP2))
         return NULL;
-    if (rotorInit(enigma, 2, rotorIII, rotorP, ringP))
+    if (rotorInit(enigma, 2, thirdRotor, rotorP3, ringP3))
         return NULL;
-    if (reflectorInit(enigma, reflectorA))
+    if (reflectorInit(enigma, reflector))
         return NULL;
     // TODO: Initilize rest of the Enigma structure
     return enigma;
