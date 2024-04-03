@@ -1,4 +1,5 @@
 #include "../inc/enigma.h"
+#include "../inc/enigmaErrors.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -10,9 +11,34 @@ int rotorInit(Enigma *enigma, int rotorIndex, char *rotorWiringConnections, char
 int reflectorInit(Enigma *enigma, char *reflectorConnections);
 char correctInput(char *input);
 
+static ENIGMA_ERROR lastEnigmaError = ENIGMA_SUCCESS;
 
-Enigma *enigmaInit(char *plugboardConnections, char *firstRotor, char *rotorP1, char *ringP1, char *secondRotor, char *rotorP2, char *ringP2, char *thirdRotor, char *rotorP3, char *ringP3, char *reflector)
+const char *errorStrings[] =
 {
+    "ENIGMA_SUCCESS",
+    "ENIGMA_PLUGBOARD_TOO_MANY_CONNECTIONS",
+    "ENIGMA_PLUGBOARD_WRONG_CONNECTION_LENGTH",
+    "ENIGMA_PLUGBOARD_CONNECTION_NOT_ALPHA",
+    "ENIGMA_PLUGBOARD_CONNECTION_ALREADY_USED",
+    "ENIGMA_PLUGBOARD_TOO_FEW_CONNECTIONS",
+    "ENIGMA_ERROR_OUT_OF_RANGE"
+};
+
+ENIGMA_ERROR getLastEnigmaError() {
+    ENIGMA_ERROR err = lastEnigmaError;
+    lastEnigmaError = ENIGMA_SUCCESS;
+    return err;
+}
+
+const char *getEnigmaErrorStr(ENIGMA_ERROR enigmaError) {
+    if(enigmaError < 0 || enigmaError >= sizeof(errorStrings) / sizeof(errorStrings[0])) {
+        lastEnigmaError = ENIGMA_ERROR_OUT_OF_RANGE;
+        return NULL;
+    }
+    return errorStrings[enigmaError];
+}
+
+Enigma *enigmaInit(char *plugboardConnections, char *firstRotor, char *rotorP1, char *ringP1, char *secondRotor, char *rotorP2, char *ringP2, char *thirdRotor, char *rotorP3, char *ringP3, char *reflector) {
     Enigma *enigma;
     enigma = (Enigma *)malloc(sizeof(Enigma));
     if (enigma == NULL)
@@ -37,41 +63,35 @@ void enigmaFree(Enigma *enigma)
     free(enigma);
 }
 
-int plugboardInit(Enigma *enigma, char *plugboardConnections)
-{
+ENIGMA_ERROR plugboardInit(Enigma *enigma, char *plugboardConnections) {
     char *connection;
     int connectionCount = 0;
     const char delim[] = " ";
     bool used[ALPHABET_SIZE] = {false};
     char tmpStr[strlen(plugboardConnections) + 1];
     strcpy(tmpStr, plugboardConnections);
-    for (int i = 0; i < ALPHABET_SIZE; i++)
-        enigma->plugboardSubstitute[i] = i;
+    for(int i = 0; i < ALPHABET_SIZE; i++) enigma->plugboardSubstitute[i] = i;
 
     connection = strtok(tmpStr, delim);
     while (connection)
     {
         connectionCount++;
         strupr(connection);
-        if (connectionCount > CONNECTIONS_COUNT)
-        {
-            fputs("Error: Too many connections", stderr);
-            return 1;
+        if(connectionCount > CONNECTIONS_COUNT) {
+            lastEnigmaError = ENIGMA_PLUGBOARD_TOO_MANY_CONNECTIONS;
+            return lastEnigmaError;
         }
-        if (strlen(connection) != 2)
-        {
-            fputs("Error: Plugborad connection wrong length", stderr);
-            return 1;
+        if(strlen(connection) != 2) {
+            lastEnigmaError = ENIGMA_PLUGBOARD_WRONG_CONNECTION_LENGTH;
+            return lastEnigmaError;
         }
-        if (!isalpha(connection[0]) || !isalpha(connection[1]))
-        {
-            fputs("Error: Plugborad connection is not alpha", stderr);
-            return 1;
+        if(!isalpha(connection[0]) || !isalpha(connection[1])) {
+            lastEnigmaError = ENIGMA_PLUGBOARD_CONNECTION_NOT_ALPHA;
+            return lastEnigmaError;
         }
-        if (used[connection[0] - 'A'] || used[connection[1] - 'A'])
-        {
-            fputs("Error: Connection already used", stderr);
-            return 1;
+        if(used[connection[0] - 'A'] || used[connection[1] - 'A'] || (connection[0] - 'A') == (connection[1] - 'A')) {
+            lastEnigmaError = ENIGMA_PLUGBOARD_CONNECTION_ALREADY_USED;
+            return lastEnigmaError;
         }
 
         int plug1 = connection[0] - 'A';
@@ -84,13 +104,13 @@ int plugboardInit(Enigma *enigma, char *plugboardConnections)
         connection = strtok(NULL, delim);
     }
 
-    if (connectionCount != CONNECTIONS_COUNT)
-    {
-        fputs("Error: Too few connections", stderr);
-        return 1;
+    if(connectionCount != CONNECTIONS_COUNT) {
+        lastEnigmaError = ENIGMA_PLUGBOARD_TOO_FEW_CONNECTIONS;
+        return lastEnigmaError;
     }
 
-    return 0;
+    lastEnigmaError = ENIGMA_SUCCESS;
+    return lastEnigmaError;
 }
 
 int rotorInit(Enigma *enigma, int rotorIndex, char *rotorWiringConnections, char *rotorP, char *ringP)

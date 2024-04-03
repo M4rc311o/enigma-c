@@ -48,6 +48,32 @@
                 "isDefault": false
             }
         },
+        {
+            "type": "cppbuild",
+            "label": "C Tests Coverage build",
+            "command": "gcc.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-Wall",
+                "-g",
+                "--coverage",
+                "${workspaceRoot}\\src\\enigma.c",
+                "${workspaceRoot}\\test\\*.c",
+                "-o",
+                "${workspaceRoot}\\TestsCoverageDebug\\enigmatests.exe",
+                "-lcunit"
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
     ],
     "version": "2.0.0"
 }

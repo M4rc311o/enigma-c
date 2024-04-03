@@ -15,6 +15,11 @@ typedef struct {
     char rotorPosition[ROTOR_COUNT];
 } Enigma;
 
+typedef int ENIGMA_ERROR;
+
+ENIGMA_ERROR getLastEnigmaError();
+const char *getEnigmaErrorStr(ENIGMA_ERROR enigmaError);
+
 Enigma *enigmaInit(char *plugboardConnections, char *firstRotor, char *rotorP1, char *ringP1, char *secondRotor, char *rotorP2, char *ringP2, char *thirdRotor, char *rotorP3, char *ringP3, char *reflector);
 void enigmaFree(Enigma *enigma);
 

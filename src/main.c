@@ -11,12 +11,11 @@ char reflectorA[ALPHABET_SIZE] = {'E', 'J', 'M', 'Z', 'A', 'L', 'Y', 'X', 'V', '
 char reflectorB[ALPHABET_SIZE] = {'Y', 'R', 'U', 'H', 'Q', 'S', 'L', 'D', 'P', 'X', 'N', 'G', 'O', 'K', 'M', 'I', 'E', 'B', 'F', 'Z', 'C', 'W', 'V', 'J', 'A', 'T'};
 char reflectorC[ALPHABET_SIZE] = {'F', 'V', 'P', 'J', 'I', 'A', 'O', 'Y', 'E', 'D', 'R', 'Z', 'X', 'W', 'G', 'C', 'T', 'K', 'U', 'Q', 'S', 'B', 'N', 'M', 'H', 'L'};
 
-int main()
-{
-
+int main() {
     Enigma *enigma;
     enigma = enigmaInit("AB CD EF GH IJ KL",rotorI,"D","A",rotorII,"E","F",rotorIII,"A","A",reflectorB);
-    if (enigma != NULL)
-        enigmaFree(enigma);
+    if(enigma != NULL) enigmaFree(enigma);
+    else printf(getEnigmaErrorStr(getLastEnigmaError()));
+
     return 0;
 }
