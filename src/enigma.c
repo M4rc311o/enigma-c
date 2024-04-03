@@ -7,9 +7,23 @@
 #include <stdbool.h>
 
 int plugboardInit(Enigma *enigma, char *plugboardConnections);
-int rotorInit(Enigma *enigma, int rotorIndex, char *rotorWiringConnections, char *rotorP, char *ringP);
+int rotorInit(Enigma *enigma, int rotorIndex, char *rotorWiringConnections, char rotorP, char ringP);
+int rotorsInit(Enigma *init, char *rotors, char *rotorsPositons, char *ringPositions);
 int reflectorInit(Enigma *enigma, char *reflectorConnections);
-char correctInput(char *input);
+
+
+char rotorI[ALPHABET_SIZE] = {'E', 'K', 'M', 'F', 'L', 'G', 'D', 'Q', 'V', 'Z', 'N', 'T', 'O', 'W', 'Y', 'H', 'X', 'U', 'S', 'P', 'A', 'I', 'B', 'R', 'C', 'J'};
+char rotorII[ALPHABET_SIZE] = {'A', 'J', 'D', 'K', 'S', 'I', 'R', 'U', 'X', 'B', 'L', 'H', 'W', 'T', 'M', 'C', 'Q', 'G', 'Z', 'N', 'P', 'Y', 'F', 'V', 'O', 'E'};
+char rotorIII[ALPHABET_SIZE] = {'B', 'D', 'F', 'H', 'J', 'L', 'C', 'P', 'R', 'T', 'X', 'V', 'Z', 'N', 'Y', 'E', 'I', 'W', 'G', 'A', 'K', 'M', 'U', 'S', 'Q', 'O'};
+char rotorIV[ALPHABET_SIZE] = {'E', 'S', 'O', 'V', 'P', 'Z', 'J', 'A', 'Y', 'Q', 'U', 'I', 'R', 'H', 'X', 'L', 'N', 'F', 'T', 'G', 'K', 'D', 'C', 'M', 'W', 'B'};
+char rotorV[ALPHABET_SIZE] = {'V', 'Z', 'B', 'R', 'G', 'I', 'T', 'Y', 'U', 'P', 'S', 'D', 'N', 'H', 'L', 'X', 'A', 'W', 'M', 'J', 'Q', 'O', 'F', 'E', 'C', 'K'};
+char reflectorA[ALPHABET_SIZE] = {'E', 'J', 'M', 'Z', 'A', 'L', 'Y', 'X', 'V', 'B', 'W', 'F', 'C', 'R', 'Q', 'U', 'O', 'N', 'T', 'S', 'P', 'I', 'K', 'H', 'G', 'D'};
+char reflectorB[ALPHABET_SIZE] = {'Y', 'R', 'U', 'H', 'Q', 'S', 'L', 'D', 'P', 'X', 'N', 'G', 'O', 'K', 'M', 'I', 'E', 'B', 'F', 'Z', 'C', 'W', 'V', 'J', 'A', 'T'};
+char reflectorC[ALPHABET_SIZE] = {'F', 'V', 'P', 'J', 'I', 'A', 'O', 'Y', 'E', 'D', 'R', 'Z', 'X', 'W', 'G', 'C', 'T', 'K', 'U', 'Q', 'S', 'B', 'N', 'M', 'H', 'L'};
+const char *rotorNames[] = {"I", "II", "III", "IV", "V"};
+char *rotorAlphabets[] = {rotorI, rotorII, rotorIII, rotorIV, rotorV};
+
+const char delim[] = " ";
 
 static ENIGMA_ERROR lastEnigmaError = ENIGMA_SUCCESS;
 
@@ -38,43 +52,34 @@ const char *getEnigmaErrorStr(ENIGMA_ERROR enigmaError) {
     return errorStrings[enigmaError];
 }
 
-Enigma *enigmaInit(char *plugboardConnections, char *firstRotor, char *rotorP1, char *ringP1, char *secondRotor, char *rotorP2, char *ringP2, char *thirdRotor, char *rotorP3, char *ringP3, char *reflector) {
+Enigma *enigmaInit(char *plugboardConnections, char *rotors, char *rotorsPosition, char *ringsPosition) {
     Enigma *enigma;
     enigma = (Enigma *)malloc(sizeof(Enigma));
-    if (enigma == NULL)
+    if(enigma == NULL)
         return NULL;
-    if (plugboardInit(enigma, plugboardConnections))
+    if(plugboardInit(enigma, plugboardConnections))
+        return NULL;
+    if(rotorsInit(enigma, rotors, rotorsPosition, ringsPosition))
         return NULL;
 
-    if (rotorInit(enigma, 0, firstRotor, rotorP1, ringP1))
-        return NULL;
-    if (rotorInit(enigma, 1, secondRotor, rotorP2, ringP2))
-        return NULL;
-    if (rotorInit(enigma, 2, thirdRotor, rotorP3, ringP3))
-        return NULL;
-    if (reflectorInit(enigma, reflector))
-        return NULL;
     // TODO: Initilize rest of the Enigma structure
     return enigma;
 }
 
-void enigmaFree(Enigma *enigma)
-{
+void enigmaFree(Enigma *enigma) {
     free(enigma);
 }
 
 ENIGMA_ERROR plugboardInit(Enigma *enigma, char *plugboardConnections) {
     char *connection;
     int connectionCount = 0;
-    const char delim[] = " ";
     bool used[ALPHABET_SIZE] = {false};
     char tmpStr[strlen(plugboardConnections) + 1];
     strcpy(tmpStr, plugboardConnections);
     for(int i = 0; i < ALPHABET_SIZE; i++) enigma->plugboardSubstitute[i] = i;
 
     connection = strtok(tmpStr, delim);
-    while (connection)
-    {
+    while(connection) {
         connectionCount++;
         strupr(connection);
         if(connectionCount > CONNECTIONS_COUNT) {
@@ -113,78 +118,108 @@ ENIGMA_ERROR plugboardInit(Enigma *enigma, char *plugboardConnections) {
     return lastEnigmaError;
 }
 
-int rotorInit(Enigma *enigma, int rotorIndex, char *rotorWiringConnections, char *rotorP, char *ringP)
+ENIGMA_ERROR rotorsInit(Enigma *enigma, char *rotors, char *rotorsPositons, char *ringPositions) {
+    char *selectedAlphabet;
+
+    char *rotor;
+    char *rotorP;
+    char *ringP;
+
+    char *saveRotor = NULL;
+    char *saveRotorP = NULL;
+    char *saveRingP = NULL;
+
+    char tmpRotor[strlen(rotors) + 1];
+    char tmpRotorP[strlen(rotorsPositons) + 1];
+    char tmpRingP[strlen(ringPositions) + 1];
+
+    strcpy(tmpRotor, rotors);
+    strcpy(tmpRotorP, rotorsPositons);
+    strcpy(tmpRingP, ringPositions);
+
+    rotor = strtok_r(tmpRotor, delim, &saveRotor);
+    rotorP = strtok_r(tmpRotorP, delim, &saveRotorP);
+    ringP = strtok_r(tmpRingP, delim, &saveRingP);
+
+    strupr(rotor);
+    strupr(rotorP);
+    strupr(ringP);
+
+    int rotorIndex = 0;
+    int round = 0;
+    int i = 0;
+    while(rotor && rotorP && ringP) {
+        round++;
+        if(rotorIndex >= ROTOR_COUNT) {
+            lastEnigmaError = ENIGMA_ROTORS_TOO_MANY_ROTORS;
+            return lastEnigmaError;
+        }
+
+        if((rotorP[0] == 0) || isalpha(ringP[0] == 0)) {
+            lastEnigmaError = ENIGMA_ROTORS_INPUT_NOT_ALPHA;
+            return lastEnigmaError;
+        }
+
+        if(strlen(rotorP) != 1 || strlen(ringP) != 1) {
+            lastEnigmaError = ENIGMA_ROTORS_WRONG_INPUT_LENGTH;
+            return lastEnigmaError;
+        }
+
+
+        //char choiceOfRotor[strlen(rotor) + strlen("rotor") + 1];
+       // strcpy(choiceOfRotor, "rotor");
+        //strcat(choiceOfRotor, rotor);
+
+
+        for(i = 0; rotorNames[i] != '\0'; i++) {
+            if(strcmp(rotor, rotorNames[i]) == 0) {
+                selectedAlphabet = rotorAlphabets[i];
+                break;
+            }
+        }
+        rotorInit(enigma, rotorIndex, selectedAlphabet, rotorP[0], ringP[0]);
+
+
+        rotor = strtok_r(NULL, delim, &saveRotor);
+        rotorP = strtok_r(NULL, delim, &saveRotorP);
+        ringP = strtok_r(NULL, delim, &saveRingP);
+
+
+        rotorIndex++;
+    }
+
+    if(round != ROTOR_COUNT){
+      lastEnigmaError = ENIGMA_ROTORS_TOO_FEW_ROTORS;
+        return lastEnigmaError;
+    }
+
+    lastEnigmaError = ENIGMA_SUCCESS;
+    return lastEnigmaError;
+}
+
+int rotorInit(Enigma *enigma, int rotorIndex, char *rotorWiringConnections, char rotorP, char ringP)
 
 {
-    if (rotorIndex < 0 || rotorIndex >= ROTOR_COUNT)
-    {
-        fputs("Error: Invalid rotor number", stderr);
-        return 1;
-    }
-
-    for (int i = 0; i < ALPHABET_SIZE; i++)
-    {
-        if (rotorWiringConnections[i] < 'A' || rotorWiringConnections[i] > 'Z')
-        {
-            fputs("Error: Invalid rotor wiring connections", stderr);
-            return 1;
-        }
-    }
-
     // mapping characters (way right->left)
-    for (int i = 0; i < ALPHABET_SIZE; i++)
-    {
+    for(int i = 0; i < ALPHABET_SIZE; i++) {
         enigma->rotorSubstitute[rotorIndex][i] = rotorWiringConnections[i] - 'A';
-    }
-
-    // mapping characters (way left->right), if rotor has letter i in position j then the inverse rotor will have letter j in position i
-
-    for (int i = 0; i < ALPHABET_SIZE; i++)
-    {
+        // mapping characters (way left->right), if rotor has letter i in position j then the inverse rotor will have letter j in position i
         enigma->rotorInverseSubstitute[rotorIndex][rotorWiringConnections[i] - 'A'] = i;
     }
 
-    // ring and rotor position
-    char cRotorP = correctInput(rotorP);
-    char cRingP = correctInput(ringP);
-    if(cRotorP !=1 && cRingP != 1){
-    enigma->rotorPosition[rotorIndex] = cRotorP - 'A';
-    enigma->ringPosition[rotorIndex] = cRingP - 'A';
-    }else{
-        fputs("Error: Invalid starting position", stderr);
-            return 1;
-    }
-
-
-    
+    enigma->rotorPosition[rotorIndex] = rotorP - 'A';
+    enigma->ringPosition[rotorIndex] = ringP - 'A';
     return 0;
 }
 
-int reflectorInit(Enigma *enigma, char *reflectorConnections ){
+int reflectorInit(Enigma *enigma, char *reflectorConnections) {
 
- for (int i = 0; i < ALPHABET_SIZE; i++)
-    {
-        if (reflectorConnections[i] < 'A' || reflectorConnections[i] > 'Z')
-        {
-            fputs("Error: Invalid reflector wiring connections", stderr);
-            return 1;
-        }
-    }
-
-    for(int i = 0; i < ALPHABET_SIZE; i++){
+    for(int i = 0; i < ALPHABET_SIZE; i++) {
         enigma->reflectorSubstitute[i] = i;
     }
     return 0;
 
 }
 
-char correctInput(char *input) {
- int length = strlen(input);
- //capital letter
-  if (length != 1 || !isalpha(input[0]) || !isupper(input[0])) {
-    return 1;
-  }        
 
-  return *input;
-}
 
