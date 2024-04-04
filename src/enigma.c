@@ -145,17 +145,33 @@ ENIGMA_ERROR rotorsInit(Enigma *enigma, char *rotors, char *rotorsPositons, char
     strupr(rotorP);
     strupr(ringP);
 
+    bool usedRotor[ROTOR_COUNT] = {false};
+
+
     int rotorIndex = 0;
     int round = 0;
     int i = 0;
     while(rotor && rotorP && ringP) {
         round++;
+
         if(rotorIndex >= ROTOR_COUNT) {
             lastEnigmaError = ENIGMA_ROTORS_TOO_MANY_ROTORS;
             return lastEnigmaError;
         }
 
-        if((rotorP[0] == 0) || isalpha(ringP[0] == 0)) {
+      for(int i = 0; i <= ROTOR_COUNT; i++) {
+            if(strcmp(rotor, rotorNames[i]) == 0) {
+                if(usedRotor[i]) {
+                    return ENIGMA_ROTORS_DUPLICATE_ROTOR;
+                }
+                else {
+                    usedRotor[i] = true;
+                    break;
+                }
+            }
+        }
+
+        if(!isalpha(rotorP[0]) || !isalpha(ringP[0])) {
             lastEnigmaError = ENIGMA_ROTORS_INPUT_NOT_ALPHA;
             return lastEnigmaError;
         }
@@ -165,31 +181,32 @@ ENIGMA_ERROR rotorsInit(Enigma *enigma, char *rotors, char *rotorsPositons, char
             return lastEnigmaError;
         }
 
-
         //char choiceOfRotor[strlen(rotor) + strlen("rotor") + 1];
-       // strcpy(choiceOfRotor, "rotor");
+        //strcpy(choiceOfRotor, "rotor");
         //strcat(choiceOfRotor, rotor);
 
-
-        for(i = 0; rotorNames[i] != '\0'; i++) {
+        for(i = 0; rotorNames[i] != NULL; i++) {
             if(strcmp(rotor, rotorNames[i]) == 0) {
                 selectedAlphabet = rotorAlphabets[i];
                 break;
             }
         }
-        rotorInit(enigma, rotorIndex, selectedAlphabet, rotorP[0], ringP[0]);
 
+        if(selectedAlphabet == NULL) {
+            lastEnigmaError = ENIGMA_ROTORS_INVALID_ROTOR;
+            return lastEnigmaError;
+        }
+
+        rotorInit(enigma, rotorIndex, selectedAlphabet, rotorP[0], ringP[0]);
 
         rotor = strtok_r(NULL, delim, &saveRotor);
         rotorP = strtok_r(NULL, delim, &saveRotorP);
         ringP = strtok_r(NULL, delim, &saveRingP);
-
-
         rotorIndex++;
     }
 
-    if(round != ROTOR_COUNT){
-      lastEnigmaError = ENIGMA_ROTORS_TOO_FEW_ROTORS;
+    if(round != ROTOR_COUNT) {
+        lastEnigmaError = ENIGMA_ROTORS_TOO_FEW_ROTORS;
         return lastEnigmaError;
     }
 
