@@ -5,7 +5,7 @@
 
 int main() {
     Enigma *enigma;
-    enigma = enigmaInit("AB CD EF GH IJ KL","V I III","A B K", "D S V");
+    enigma = enigmaInit("AB CD EF GH IJ KL","I II V","K A A", "S V X");
   
         for(int j=0;j<3;j++){
                         printf("\nRotor %d  Substitution:\n", j);
