@@ -6,12 +6,27 @@
 #define CONNECTIONS_COUNT 6
 
 typedef struct {
-    char rotorSubstitute[ROTOR_COUNT][ALPHABET_SIZE];
-    char rotorInverseSubstitute[ROTOR_COUNT][ALPHABET_SIZE];
+    const char *name;
+    char rotorSubstitute[ALPHABET_SIZE];
+    char rotorInverseSubstitute[ALPHABET_SIZE];
+    char ringPosition;
+    char rotorPosition;
+    char notchPosition;
+} Rotor;
+
+typedef struct {
+    const char *name;
     char reflectorSubstitute[ALPHABET_SIZE];
+} Reflector;
+
+typedef struct {
     char plugboardSubstitute[ALPHABET_SIZE];
-    char ringPosition[ROTOR_COUNT];
-    char rotorPosition[ROTOR_COUNT];
+} Plugboard;
+
+typedef struct {
+    Rotor rotors[ROTOR_COUNT];
+    Reflector reflector;
+    Plugboard plugboard;
 } Enigma;
 
 typedef int ENIGMA_ERROR;
@@ -19,7 +34,7 @@ typedef int ENIGMA_ERROR;
 ENIGMA_ERROR getLastEnigmaError();
 const char *getEnigmaErrorStr(ENIGMA_ERROR enigmaError);
 
-Enigma *enigmaInit(char *plugboardConnections);
+Enigma *enigmaInit(char *plugboardConnections, char *rotors, char *rotorsPosition, char *ringsPosition);
 void enigmaFree(Enigma *enigma);
 
 #endif /* ENIGMA_H_ */
