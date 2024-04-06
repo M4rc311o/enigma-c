@@ -3,16 +3,21 @@
 #include <stdio.h>
 
 CU_ErrorCode plugboardInitSuiteFunction();
+CU_ErrorCode rotorsInitSuiteFunction();
 
 int main() {
 	CU_initialize_registry();
 	if(CU_initialize_registry() != CUE_SUCCESS) return CU_get_error();
 
-	if(plugboardInitSuiteFunction() != CUE_SUCCESS) {
+if(plugboardInitSuiteFunction() != CUE_SUCCESS) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
 
+if(rotorsInitSuiteFunction() != CUE_SUCCESS) {
+		CU_cleanup_registry();
+		return CU_get_error();
+	}
 	CU_basic_set_mode(CU_BRM_VERBOSE);
 	CU_basic_run_tests();
 	CU_cleanup_registry();

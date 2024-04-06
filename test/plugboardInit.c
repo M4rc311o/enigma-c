@@ -5,9 +5,9 @@
 void charCasingTest() {
     Enigma *enigma = enigmaInit("AB cd eF Gh ij KL", "I II III", "A A A", "A A A");
     CU_ASSERT_PTR_NOT_NULL(enigma);
-    char expPLugboardSubstitue[] = {1, 0, 3, 2, 5, 4, 7, 6, 9, 8, 11, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
+    char expPLugboardSubstitue[] = {1, 0, 3, 2, 5, 4, 7, 6, 9, 8, 11, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25};
     for(int i = 0; i < ALPHABET_SIZE; i++) {
-        CU_ASSERT_EQUAL(enigma->plugboardSubstitute[i], expPLugboardSubstitue[i]);
+      CU_ASSERT_EQUAL(enigma->plugboard.plugboardSubstitute[i], expPLugboardSubstitue[i]);
     }
     enigmaFree(enigma);
 }
