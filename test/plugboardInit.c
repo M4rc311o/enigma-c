@@ -1,4 +1,5 @@
 #include <CUnit/Basic.h>
+#include <stdlib.h>
 #include "../inc/enigma.h"
 #include "../inc/enigmaErrors.h"
 
