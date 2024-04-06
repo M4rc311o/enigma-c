@@ -1,4 +1,5 @@
 #include <CUnit/Basic.h>
+#include <stdlib.h>
 #include "../inc/enigma.h"
 #include "../inc/enigmaErrors.h"
 
@@ -7,7 +8,7 @@ void charCasingTest() {
     CU_ASSERT_PTR_NOT_NULL(enigma);
     char expPLugboardSubstitue[] = {1, 0, 3, 2, 5, 4, 7, 6, 9, 8, 11, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25};
     for(int i = 0; i < ALPHABET_SIZE; i++) {
-      CU_ASSERT_EQUAL(enigma->plugboard.plugboardSubstitute[i], expPLugboardSubstitue[i]);
+        CU_ASSERT_EQUAL(enigma->plugboard.plugboardSubstitute[i], expPLugboardSubstitue[i]);
     }
     enigmaFree(enigma);
 }
