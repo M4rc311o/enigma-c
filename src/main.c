@@ -30,6 +30,15 @@ int main() {
         printf("%c -> %c\n", 'A' + i, 'A' + enigma->reflector.reflectorSubstitute[i]);
     }
 
+    puts("\nPress enter to start stepping:");
+    while(getchar()) {
+        for(int r = 0; r < ROTOR_COUNT; r++) {
+            printf("Rotor %d (%s) position: %d (%c)\n", r, enigma->rotors[r].name, enigma->rotors[r].rotorPosition, enigma->rotors[r].rotorPosition + 'A');
+        }
+
+        rotorsRotate(enigma->rotors);
+    }
+
     enigmaFree(enigma);
     return 0;
 }

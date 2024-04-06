@@ -13,6 +13,7 @@ int plugboardInit(Plugboard *plugboard, char *plugboardConnections);
 int rotorsInit(Rotor rotors[], char *rotorsNames, char *rotorsPositons, char *ringPositions);
 int rotorInit(Rotor *rotor, const char *rotorWiringConnections, char rotorP, char ringP, char notchP);
 int reflectorInit(Reflector *reflector, const char *reflectorConnections);
+//ENIGMA_ERROR rotorsRotate(Rotor rotors[]);
 
 const char rotorI[ALPHABET_SIZE] = {'E', 'K', 'M', 'F', 'L', 'G', 'D', 'Q', 'V', 'Z', 'N', 'T', 'O', 'W', 'Y', 'H', 'X', 'U', 'S', 'P', 'A', 'I', 'B', 'R', 'C', 'J'};
 const char rotorII[ALPHABET_SIZE] = {'A', 'J', 'D', 'K', 'S', 'I', 'R', 'U', 'X', 'B', 'L', 'H', 'W', 'T', 'M', 'C', 'Q', 'G', 'Z', 'N', 'P', 'Y', 'F', 'V', 'O', 'E'};
@@ -249,6 +250,30 @@ ENIGMA_ERROR rotorInit(Rotor *rotor, const char *rotorWiringConnections, char ro
 ENIGMA_ERROR reflectorInit(Reflector *reflector, const char *reflectorConnections) {
     for(int i = 0; i < ALPHABET_SIZE; i++) {
         reflector->reflectorSubstitute[i] = reflectorConnections[i] - 'A';
+    }
+
+    lastEnigmaError = ENIGMA_SUCCESS;
+    return lastEnigmaError;
+}
+
+ENIGMA_ERROR rotorsRotate(Rotor rotors[]) {
+    for(int r = 0; r < ROTOR_COUNT; r++) {
+        // Left most rotor
+        if(r == 0) {
+            if(rotors[r + 1].rotorPosition == rotors[r + 1].notchPosition) {
+                rotors[r].rotorPosition = (rotors[r].rotorPosition + 1) % ALPHABET_SIZE;
+            }
+        }
+        // Right most rotor
+        else if(r == ROTOR_COUNT - 1) {
+            rotors[r].rotorPosition = (rotors[r].rotorPosition + 1) % ALPHABET_SIZE;
+        }
+        // Middle rotors
+        else {
+            if(rotors[r].rotorPosition == rotors[r].notchPosition || rotors[r + 1].rotorPosition == rotors[r + 1].notchPosition) {
+                rotors[r].rotorPosition = (rotors[r].rotorPosition + 1) % ALPHABET_SIZE;
+            }
+        }
     }
 
     lastEnigmaError = ENIGMA_SUCCESS;
