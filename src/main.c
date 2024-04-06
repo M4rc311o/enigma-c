@@ -24,7 +24,8 @@ int main() {
         }
         printf("\n");
     }
-
+    /* In order try this part of code you need to expose rotorsRotate() function in header file*/
+    /*
     printf("Reflector (%s) substitution:\n", enigma->reflector.name);
     for(int i = 0; i < ALPHABET_SIZE; i++) {
         printf("%c -> %c\n", 'A' + i, 'A' + enigma->reflector.reflectorSubstitute[i]);
@@ -38,6 +39,7 @@ int main() {
 
         rotorsRotate(enigma->rotors);
     }
+    */
 
     enigmaFree(enigma);
     return 0;
