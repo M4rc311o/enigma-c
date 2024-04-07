@@ -35,6 +35,6 @@ ENIGMA_ERROR getLastEnigmaError();
 const char *getEnigmaErrorStr(ENIGMA_ERROR enigmaError);
 
 Enigma *enigmaInit(char *plugboardConnections, char *rotors, char *rotorsPosition, char *ringsPosition);
-ENIGMA_ERROR enigmaFree(Enigma *enigma);
+void enigmaFree(Enigma *enigma);
 
 #endif /* ENIGMA_H_ */

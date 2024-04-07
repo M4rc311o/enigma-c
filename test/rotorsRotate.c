@@ -12,7 +12,7 @@ int initSuite() {
 }
 
 int cleanSuite() {
-    if(enigmaFree(enigma) != ENIGMA_SUCCESS) return 1;
+    enigmaFree(enigma);
     return 0;
 }
 

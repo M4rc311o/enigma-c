@@ -89,11 +89,8 @@ Enigma *enigmaInit(char *plugboardConnections, char *rotorsNames, char *rotorsPo
     return enigma;
 }
 
-ENIGMA_ERROR enigmaFree(Enigma *enigma) {
+void enigmaFree(Enigma *enigma) {
     free(enigma);
-
-    lastEnigmaError = ENIGMA_SUCCESS;
-    return lastEnigmaError;
 }
 
 ENIGMA_ERROR plugboardInit(Plugboard *plugboard, char *plugboardConnections) {
