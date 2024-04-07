@@ -34,6 +34,8 @@ typedef int ENIGMA_ERROR;
 ENIGMA_ERROR getLastEnigmaError();
 const char *getEnigmaErrorStr(ENIGMA_ERROR enigmaError);
 
+char enigmaEncChar(Enigma *enigma, char ch);
+
 Enigma *enigmaInit(char *plugboardConnections, char *rotors, char *rotorsPosition, char *ringsPosition);
 ENIGMA_ERROR enigmaFree(Enigma *enigma);
 
