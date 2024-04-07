@@ -17,21 +17,21 @@ void rotorSubTest() {
     const int rotorIinverse[] = {20, 22, 24, 6, 0, 3, 5, 15, 21, 25, 1, 4, 2, 10, 12, 19, 7, 23, 18, 11, 17, 8, 13, 16, 14, 9};
 
 
- for(int j = 0; j < ROTOR_COUNT; j++) {
+    for(int j = 0; j < ROTOR_COUNT; j++) {
         for(int i = 0; i < ALPHABET_SIZE; i++) {
-            switch (j) {
-                case 0:
-                    CU_ASSERT_EQUAL(enigma->rotors[j].rotorSubstitute[i], expRotorIIISub[i]);
-                    CU_ASSERT_EQUAL(enigma->rotors[j].rotorInverseSubstitute[i], expRotorIIIinverseSub[i]);
-                    break;
-                case 1:
-                    CU_ASSERT_EQUAL(enigma->rotors[j].rotorSubstitute[i], expRotorIISub[i]);
-                    CU_ASSERT_EQUAL(enigma->rotors[j].rotorInverseSubstitute[i], expRotorIIinverseSub[i]);
-                    break;
-                case 2:
-                  CU_ASSERT_EQUAL(enigma->rotors[j].rotorSubstitute[i], rotorI[i]);
-                  CU_ASSERT_EQUAL(enigma->rotors[j].rotorInverseSubstitute[i], rotorIinverse[i]);
-                    break;
+            switch(j) {
+            case 0:
+                CU_ASSERT_EQUAL(enigma->rotors[j].rotorSubstitute[i], expRotorIIISub[i]);
+                CU_ASSERT_EQUAL(enigma->rotors[j].rotorInverseSubstitute[i], expRotorIIIinverseSub[i]);
+                break;
+            case 1:
+                CU_ASSERT_EQUAL(enigma->rotors[j].rotorSubstitute[i], expRotorIISub[i]);
+                CU_ASSERT_EQUAL(enigma->rotors[j].rotorInverseSubstitute[i], expRotorIIinverseSub[i]);
+                break;
+            case 2:
+                CU_ASSERT_EQUAL(enigma->rotors[j].rotorSubstitute[i], rotorI[i]);
+                CU_ASSERT_EQUAL(enigma->rotors[j].rotorInverseSubstitute[i], rotorIinverse[i]);
+                break;
             }
         }
     }
@@ -39,65 +39,65 @@ void rotorSubTest() {
     enigmaFree(enigma);
 }
 
-void rotorPositionTest(){
-Enigma *enigma;
+void rotorPositionTest() {
+    Enigma *enigma;
 
-  enigma = enigmaInit("AB CD EF GH IJ KL", "I II III", "1 A2 ?", "A A A");
+    enigma = enigmaInit("AB CD EF GH IJ KL", "I II III", "1 A2 ?", "A A A");
     CU_ASSERT_PTR_NULL(enigma);
     CU_ASSERT_EQUAL(getLastEnigmaError(), ENIGMA_ROTORS_INVALID_ROTOR_POSITION);
 
 
- enigma = enigmaInit("AB CD EF GH IJ KL", "I II III", "ABD AS AAAA", "A A A");
+    enigma = enigmaInit("AB CD EF GH IJ KL", "I II III", "ABD AS AAAA", "A A A");
     CU_ASSERT_PTR_NULL(enigma);
     CU_ASSERT_EQUAL(getLastEnigmaError(), ENIGMA_ROTORS_INVALID_ROTOR_POSITION);
 }
 
 
-void ringPositionTest(){
-Enigma *enigma;
+void ringPositionTest() {
+    Enigma *enigma;
 
-  enigma = enigmaInit("AB CD EF GH IJ KL", "I II III", "A A A", "1 A2 ?");
+    enigma = enigmaInit("AB CD EF GH IJ KL", "I II III", "A A A", "1 A2 ?");
     CU_ASSERT_PTR_NULL(enigma);
     CU_ASSERT_EQUAL(getLastEnigmaError(), ENIGMA_ROTORS_INVALID_RING_POSITION);
 
 
- enigma = enigmaInit("AB CD EF GH IJ KL", "I II III", "A A A", "ABD AS AAAA");
+    enigma = enigmaInit("AB CD EF GH IJ KL", "I II III", "A A A", "ABD AS AAAA");
     CU_ASSERT_PTR_NULL(enigma);
     CU_ASSERT_EQUAL(getLastEnigmaError(), ENIGMA_ROTORS_INVALID_RING_POSITION);
 
 
 }
 
-void numOfConnections(){
-Enigma *enigma;
+void numOfConnections() {
+    Enigma *enigma;
 
-enigma = enigmaInit("AB CD EF GH IJ KL", "I II III V", "A A A", "A A A");
+    enigma = enigmaInit("AB CD EF GH IJ KL", "I II III V", "A A A", "A A A");
     CU_ASSERT_PTR_NULL(enigma);
     CU_ASSERT_EQUAL(getLastEnigmaError(), ENIGMA_ROTORS_TOO_MANY_ROTORS);
 
-enigma = enigmaInit("AB CD EF GH IJ KL", "I II", "A A A", "A A A");
+    enigma = enigmaInit("AB CD EF GH IJ KL", "I II", "A A A", "A A A");
     CU_ASSERT_PTR_NULL(enigma);
     CU_ASSERT_EQUAL(getLastEnigmaError(), ENIGMA_ROTORS_TOO_FEW_ROTORS);
 
 
-enigma = enigmaInit("AB CD EF GH IJ KL", "I II III V", "A A", "A A A");
+    enigma = enigmaInit("AB CD EF GH IJ KL", "I II III V", "A A", "A A A");
     CU_ASSERT_PTR_NULL(enigma);
     CU_ASSERT_EQUAL(getLastEnigmaError(), ENIGMA_ROTORS_TOO_FEW_ROTOR_POSITIONS);
 
-enigma = enigmaInit("AB CD EF GH IJ KL", "I II III V", "A A A", "A A");
+    enigma = enigmaInit("AB CD EF GH IJ KL", "I II III V", "A A A", "A A");
     CU_ASSERT_PTR_NULL(enigma);
     CU_ASSERT_EQUAL(getLastEnigmaError(), ENIGMA_ROTORS_TOO_FEW_RING_POSITIONS);
 
 }
 
-void rotorNameTest(){
-Enigma *enigma;
+void rotorNameTest() {
+    Enigma *enigma;
 
-enigma = enigmaInit("AB CD EF GH IJ KL", "I X D", "A A A", "A A A");
+    enigma = enigmaInit("AB CD EF GH IJ KL", "I X D", "A A A", "A A A");
     CU_ASSERT_PTR_NULL(enigma);
     CU_ASSERT_EQUAL(getLastEnigmaError(), ENIGMA_ROTORS_ROTOR_NAME_NOT_FOUND);
 
-enigma = enigmaInit("AB CD EF GH IJ KL", "I V I", "A A A", "A A A");
+    enigma = enigmaInit("AB CD EF GH IJ KL", "I V I", "A A A", "A A A");
     CU_ASSERT_PTR_NULL(enigma);
     CU_ASSERT_EQUAL(getLastEnigmaError(), ENIGMA_ROTORS_ROTOR_ALREADY_USED);
 
@@ -120,13 +120,11 @@ CU_ErrorCode rotorsInitSuiteFunction() {
 
     }
 
-    
     if(CU_add_test(rotorsInitSuite, "Rotor Position", rotorPositionTest) == NULL) {
         CU_cleanup_registry();
         return CU_get_error();
 
     }
-
 
     if(CU_add_test(rotorsInitSuite, "Ring Position", ringPositionTest) == NULL) {
         CU_cleanup_registry();
@@ -134,15 +132,14 @@ CU_ErrorCode rotorsInitSuiteFunction() {
 
     }
 
-       if(CU_add_test(rotorsInitSuite, "Connections Count", numOfConnections) == NULL) {
+    if(CU_add_test(rotorsInitSuite, "Connections Count", numOfConnections) == NULL) {
         CU_cleanup_registry();
         return CU_get_error();
 
     }
 
 
-
-       if(CU_add_test(rotorsInitSuite, "Rotor Name", rotorNameTest) == NULL) {
+    if(CU_add_test(rotorsInitSuite, "Rotor Name", rotorNameTest) == NULL) {
         CU_cleanup_registry();
         return CU_get_error();
 
