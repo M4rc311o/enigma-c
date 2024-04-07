@@ -4,6 +4,7 @@
 
 CU_ErrorCode plugboardInitSuiteFunction();
 CU_ErrorCode rotorsInitSuiteFunction();
+CU_ErrorCode rotorsRotateSuiteFunction();
 
 int main() {
 	CU_initialize_registry();
@@ -15,6 +16,11 @@ int main() {
 	}
 
 	if(rotorsInitSuiteFunction() != CUE_SUCCESS) {
+		CU_cleanup_registry();
+		return CU_get_error();
+	}
+
+	if(rotorsRotateSuiteFunction() != CUE_SUCCESS) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
