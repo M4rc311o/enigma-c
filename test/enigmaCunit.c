@@ -10,7 +10,7 @@ int main() {
 	CU_initialize_registry();
 	if(CU_initialize_registry() != CUE_SUCCESS) return CU_get_error();
 
-	if(plugboardInitSuiteFunction() != CUE_SUCCESS) {
+if(plugboardInitSuiteFunction() != CUE_SUCCESS) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
