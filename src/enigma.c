@@ -11,13 +11,13 @@
 
 ENIGMA_ERROR plugboardInit(Plugboard *plugboard, char *plugboardConnections);
 ENIGMA_ERROR rotorsInit(Rotor rotors[], char *rotorsNames, char *rotorsPositons, char *ringPositions);
-ENIGMA_ERROR rotorInit(Rotor *rotor, const char *rotorWiringConnections, char rotorP, char ringP, char notchP);
+ENIGMA_ERROR rotorInit(Rotor *rotor, const char *rotorWiringConnections, int rotorP, int ringP, int notchP);
 ENIGMA_ERROR reflectorInit(Reflector *reflector, const char *reflectorConnections);
 ENIGMA_ERROR rotorsRotate(Rotor rotors[]);
-char plugboardEncChar(Plugboard plugboard, char ch);
-char rotorsEncCharRightToLeft(Rotor rotors[], char ch);
-char rotorsEncCharLeftToRight(Rotor rotors[], char ch);
-char reflectorEncChar(Reflector reflector, char ch);
+int plugboardEncChar(Plugboard plugboard, int pos);
+int rotorsEncCharRightToLeft(Rotor rotors[], int pos);
+int rotorsEncCharLeftToRight(Rotor rotors[], int pos);
+int reflectorEncChar(Reflector reflector, int pos);
 
 const char rotorI[ALPHABET_SIZE] = {'E', 'K', 'M', 'F', 'L', 'G', 'D', 'Q', 'V', 'Z', 'N', 'T', 'O', 'W', 'Y', 'H', 'X', 'U', 'S', 'P', 'A', 'I', 'B', 'R', 'C', 'J'};
 const char rotorII[ALPHABET_SIZE] = {'A', 'J', 'D', 'K', 'S', 'I', 'R', 'U', 'X', 'B', 'L', 'H', 'W', 'T', 'M', 'C', 'Q', 'G', 'Z', 'N', 'P', 'Y', 'F', 'V', 'O', 'E'};
@@ -243,7 +243,7 @@ ENIGMA_ERROR rotorsInit(Rotor rotors[], char *rotorsNames, char *rotorsPositons,
     return lastEnigmaError;
 }
 
-ENIGMA_ERROR rotorInit(Rotor *rotor, const char *rotorWiringConnections, char rotorP, char ringP, char notchP) {
+ENIGMA_ERROR rotorInit(Rotor *rotor, const char *rotorWiringConnections, int rotorP, int ringP, int notchP) {
     for(int i = 0; i < ALPHABET_SIZE; i++) {
         // mapping characters (way right->left)
         rotor->rotorSubstitute[i] = rotorWiringConnections[i] - 'A';
@@ -293,50 +293,52 @@ ENIGMA_ERROR rotorsRotate(Rotor rotors[]) {
     return lastEnigmaError;
 }
 
-char plugboardEncChar(Plugboard plugboard, char ch) {
-    return plugboard.plugboardSubstitute[ch - 'A'] + 'A';
+int plugboardEncChar(Plugboard plugboard, int pos) {
+    return plugboard.plugboardSubstitute[pos];
 }
 
-char rotorsEncCharRightToLeft(Rotor rotors[], char ch) {
-    char pos = ch - 'A';
-
+int rotorsEncCharRightToLeft(Rotor rotors[], int pos) {
     for(int r = ROTOR_COUNT - 1; r >= 0; r--) {
         Rotor rotor = rotors[r];
+        int rPos = rotor.rotorPosition - rotor.ringPosition;
+        if(rPos < 0) rPos += ALPHABET_SIZE;
 
-        pos = rotor.rotorSubstitute[(pos + rotor.rotorPosition) % ALPHABET_SIZE] - rotor.rotorPosition;
+        pos = rotor.rotorSubstitute[(pos + rPos) % ALPHABET_SIZE] - rPos;
         if(pos < 0) pos += ALPHABET_SIZE;
     }
 
-    return pos + 'A';
+    return pos;
 }
 
-char rotorsEncCharLeftToRight(Rotor rotors[], char ch) {
-    char pos = ch - 'A';
-
+int rotorsEncCharLeftToRight(Rotor rotors[], int pos) {
     for(int r = 0; r < ROTOR_COUNT; r++) {
         Rotor rotor = rotors[r];
+        int rPos = rotor.rotorPosition - rotor.ringPosition;
+        if(rPos < 0) rPos += ALPHABET_SIZE;
 
-        pos = rotor.rotorInverseSubstitute[(pos + rotor.rotorPosition) % ALPHABET_SIZE] - rotor.rotorPosition;
+        pos = rotor.rotorInverseSubstitute[(pos + rPos) % ALPHABET_SIZE] - rPos;
         if(pos < 0) pos += ALPHABET_SIZE;
     }
 
-    return pos + 'A';
+    return pos;
 }
 
-char reflectorEncChar(Reflector reflector, char ch) {
-    return reflector.reflectorSubstitute[ch - 'A'] + 'A';
+int reflectorEncChar(Reflector reflector, int pos) {
+    return reflector.reflectorSubstitute[pos];
 }
 
 char enigmaEncChar(Enigma *enigma, char ch) {
-    char encCh;
+    // Add convertign char to upper case and check if it is valid character (A-Z)
+
+    int encCh = ch - 'A';
 
     rotorsRotate(enigma->rotors);
 
-    encCh = plugboardEncChar(enigma->plugboard, ch);
+    encCh = plugboardEncChar(enigma->plugboard, encCh);
     encCh = rotorsEncCharRightToLeft(enigma->rotors, encCh);
     encCh = reflectorEncChar(enigma->reflector, encCh);
     encCh = rotorsEncCharLeftToRight(enigma->rotors, encCh);
     encCh = plugboardEncChar(enigma->plugboard, encCh);
 
-    return encCh;
+    return encCh + 'A';
 }

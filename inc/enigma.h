@@ -7,20 +7,20 @@
 
 typedef struct {
     const char *name;
-    char rotorSubstitute[ALPHABET_SIZE];
-    char rotorInverseSubstitute[ALPHABET_SIZE];
-    char ringPosition;
-    char rotorPosition;
-    char notchPosition;
+    int rotorSubstitute[ALPHABET_SIZE];
+    int rotorInverseSubstitute[ALPHABET_SIZE];
+    int ringPosition;
+    int rotorPosition;
+    int notchPosition;
 } Rotor;
 
 typedef struct {
     const char *name;
-    char reflectorSubstitute[ALPHABET_SIZE];
+    int reflectorSubstitute[ALPHABET_SIZE];
 } Reflector;
 
 typedef struct {
-    char plugboardSubstitute[ALPHABET_SIZE];
+    int plugboardSubstitute[ALPHABET_SIZE];
 } Plugboard;
 
 typedef struct {
