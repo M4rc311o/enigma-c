@@ -1,6 +1,7 @@
 #include "../inc/enigma.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 
 int main() {
@@ -10,6 +11,10 @@ int main() {
         printf(getEnigmaErrorStr(getLastEnigmaError()));
         return 1;
     }
+
+    char encrypted[1000]; 
+    enigmaEncStr(enigma, "tak Si pEkny", encrypted);
+    printf("%s",encrypted);    
 
     enigmaFree(enigma);
     return 0;

@@ -52,7 +52,8 @@ const char *errorStrings[] =
     "ENIGMA_ROTORS_INVALID_RING_POSITION",
     "ENIGMA_ROTORS_TOO_FEW_ROTORS",
     "ENIGMA_ROTORS_TOO_FEW_ROTOR_POSITIONS",
-    "ENIGMA_ROTORS_TOO_FEW_RING_POSITIONS"
+    "ENIGMA_ROTORS_TOO_FEW_RING_POSITIONS",
+    "ENIGMA_ENC_CHAR_NOT_ALPHA"
 };
 
 ENIGMA_ERROR getLastEnigmaError() {
@@ -329,7 +330,11 @@ int reflectorEncChar(Reflector reflector, int pos) {
 
 char enigmaEncChar(Enigma *enigma, char ch) {
     // Add convertign char to upper case and check if it is valid character (A-Z)
-
+    if(isalpha(ch) == 0) {
+        lastEnigmaError = ENIGMA_ENC_CHAR_NOT_ALPHA;
+        return 0;
+    }
+    ch = toupper(ch);
     int encCh = ch - 'A';
 
     rotorsRotate(enigma->rotors);
@@ -341,4 +346,21 @@ char enigmaEncChar(Enigma *enigma, char ch) {
     encCh = plugboardEncChar(enigma->plugboard, encCh);
 
     return encCh + 'A';
+}
+
+ENIGMA_ERROR enigmaEncStr(Enigma *enigma, char input[], char encrypted[]) {
+    int j = 0;
+
+    for(int i = 0; i <= strlen(input); i++) {
+        if(input[i] != ' ') {
+            encrypted[j] = enigmaEncChar(enigma, input[i]);
+            if(encrypted[j] == 0) {
+                return lastEnigmaError;
+            }
+            j++;
+        }
+    }
+    encrypted[j] = '\0';
+    lastEnigmaError = ENIGMA_SUCCESS;
+    return ENIGMA_SUCCESS;
 }
