@@ -14,7 +14,7 @@ int main() {
     }
 
     char encrypted[1000]; 
-    enigmaEncStr(enigma, "tak Si pEkny", encrypted);
+    enigmaEncStr(enigma, "teSt SifRovacEj FunkcIe", encrypted);
     printf("%s",encrypted);    
 
     enigmaFree(enigma);

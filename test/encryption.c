@@ -1,0 +1,49 @@
+#include <CUnit/Basic.h>
+#include <stdlib.h>
+#include "../inc/enigma.h"
+#include "../inc/enigmaErrors.h"
+
+void encryptionCharTest() {
+    char input[] = {'a', 'B', 'c', 'd', 'E', 'f', 'g', 'H', 'i', 'J', 'k', 'L', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+    char expected[] = {'M', 'F', 'K', 'I', 'Q', 'B', 'J', 'V', 'D', 'G', 'C', 'U', 'A', 'S', 'W', 'T', 'E', 'Z', 'N', 'P', 'L', 'H', 'O', 'Y', 'X', 'R'};
+    
+    for(int x=0;x<(sizeof(input)-1);x++){
+        Enigma *enigma = enigmaInit("AB CD EF GH IJ KL", "I II III", "A B C", "G H I");
+        CU_ASSERT_EQUAL(enigmaEncChar(enigma, input[x]),expected[x]);
+        free(enigma);
+    }
+}
+
+void encryptionStrTest() {
+    char input[] = "teSt SifRovacEj FunkcIe";
+    char expected[] = "HPVCYEPCUGFIOBZSYXPYR"; 
+    char encrypted[1000];
+    Enigma *enigma = enigmaInit("QR SX VI OC PD KL", "V II IV", "C X D", "Z Y I");
+    enigmaEncStr(enigma, input, encrypted);
+    for(int x=0;x<(sizeof(input)-1);x++){
+        CU_ASSERT_EQUAL(encrypted[x],expected[x]);
+    }
+    free(enigma);
+}
+
+
+CU_ErrorCode encryptionSuiteFunction() {
+    CU_pSuite encryptionSuite = NULL;
+    encryptionSuite = CU_add_suite("Encryption", NULL, NULL);
+    if(encryptionSuite == NULL) {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    if(CU_add_test(encryptionSuite, "Character encryption test", encryptionCharTest) == NULL) {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    if(CU_add_test(encryptionSuite, "String encryption test", encryptionStrTest) == NULL) {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+    
+    return CU_get_error();
+}
