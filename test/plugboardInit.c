@@ -55,6 +55,12 @@ void multiConnectionsTest() {
     CU_ASSERT_EQUAL(getLastEnigmaError(), ENIGMA_PLUGBOARD_WRONG_CONNECTION_LENGTH);
 }
 
+void nullInputPlugboard() {
+    Enigma *enigma = enigmaInit(NULL, "I II III", "A A A", "A A A");
+    CU_ASSERT_PTR_NULL(enigma);
+    CU_ASSERT_EQUAL(getLastEnigmaError(), ENIGMA_INIT_NULL_INPUT);
+}
+
 CU_ErrorCode plugboardInitSuiteFunction() {
     CU_pSuite plugboardInitSuite = NULL;
     plugboardInitSuite = CU_add_suite("Plugboard initialization", NULL, NULL);
@@ -84,6 +90,12 @@ CU_ErrorCode plugboardInitSuiteFunction() {
     }
 
     if(CU_add_test(plugboardInitSuite, "Multi connections", multiConnectionsTest) == NULL) {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    
+    if(CU_add_test(plugboardInitSuite, "Null input plugboard", nullInputPlugboard) == NULL) {
         CU_cleanup_registry();
         return CU_get_error();
     }

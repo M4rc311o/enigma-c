@@ -104,6 +104,14 @@ void rotorNameTest() {
 
 }
 
+void nullInputRotors() {
+    Enigma *enigma = enigmaInit("AB CD EF GH IJ KL", NULL,NULL, NULL);
+    CU_ASSERT_PTR_NULL(enigma);
+    CU_ASSERT_EQUAL(getLastEnigmaError(), ENIGMA_INIT_NULL_INPUT);
+}
+
+
+
 
 CU_ErrorCode rotorsInitSuiteFunction() {
     CU_pSuite rotorsInitSuite = NULL;
@@ -144,6 +152,13 @@ CU_ErrorCode rotorsInitSuiteFunction() {
         return CU_get_error();
 
     }
+
+if(CU_add_test(rotorsInitSuite, "Null input rotors", nullInputRotors) == NULL) {
+        CU_cleanup_registry();
+        return CU_get_error();
+
+    }
+   
 
     return CU_get_error();
 

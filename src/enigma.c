@@ -100,8 +100,22 @@ void enigmaFree(Enigma *enigma) {
 ENIGMA_ERROR plugboardInit(Plugboard *plugboard, char *plugboardConnections) {
     char *connection;
     int connectionCount = 0;
+
+    if(plugboardConnections == NULL) {
+        lastEnigmaError = ENIGMA_INIT_NULL_INPUT;
+        return lastEnigmaError;
+    }
+
     bool used[ALPHABET_SIZE] = {false};
-    char tmpStr[strlen(plugboardConnections) + 1];
+    int plugBlength = strlen(plugboardConnections) + 1;
+    char *tmpStr = (char *)malloc(plugBlength * sizeof(char));
+
+    if(tmpStr == NULL) {
+        lastEnigmaError = ENIGMA_UNSUCCESSFUL_MEM_ALLOCATION;
+        return lastEnigmaError;
+
+    }
+
     strcpy(tmpStr, plugboardConnections);
     for(int i = 0; i < ALPHABET_SIZE; i++) plugboard->plugboardSubstitute[i] = i;
 
@@ -142,6 +156,7 @@ ENIGMA_ERROR plugboardInit(Plugboard *plugboard, char *plugboardConnections) {
     }
 
     lastEnigmaError = ENIGMA_SUCCESS;
+    free(tmpStr);
     return lastEnigmaError;
 }
 
@@ -156,9 +171,24 @@ ENIGMA_ERROR rotorsInit(Rotor rotors[], char *rotorsNames, char *rotorsPositons,
     char *saveRotorP = NULL;
     char *saveRingP = NULL;
 
-    char tmpRotor[strlen(rotorsNames) + 1];
-    char tmpRotorP[strlen(rotorsPositons) + 1];
-    char tmpRingP[strlen(ringPositions) + 1];
+    if(rotorsNames == NULL || rotorsPositons == NULL || ringPositions == NULL) {
+        lastEnigmaError = ENIGMA_INIT_NULL_INPUT;
+        return lastEnigmaError;
+    }
+
+    int rotorNlength = strlen(rotorsNames) + 1;
+    int rotorPlength = strlen(rotorsPositons) + 1;
+    int ringPlength = strlen(ringPositions) + 1;
+
+    char *tmpRotor = (char *)malloc(rotorNlength * sizeof(char));
+    char *tmpRotorP = (char *)malloc(rotorPlength * sizeof(char));
+    char *tmpRingP = (char *)malloc(ringPlength * sizeof(char));
+
+    if(tmpRotor == NULL || tmpRotorP == NULL || tmpRingP == NULL) {
+        lastEnigmaError = ENIGMA_UNSUCCESSFUL_MEM_ALLOCATION;
+        return lastEnigmaError;
+
+    }
 
     strcpy(tmpRotor, rotorsNames);
     strcpy(tmpRotorP, rotorsPositons);
@@ -237,6 +267,10 @@ ENIGMA_ERROR rotorsInit(Rotor rotors[], char *rotorsNames, char *rotorsPositons,
     }
 
     lastEnigmaError = ENIGMA_SUCCESS;
+
+    free(tmpRotor);
+    free(tmpRotorP);
+    free(tmpRingP);
     return lastEnigmaError;
 }
 
