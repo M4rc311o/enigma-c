@@ -36,6 +36,8 @@ const char *getEnigmaErrorStr(ENIGMA_ERROR enigmaError);
 
 char enigmaEncChar(Enigma *enigma, char ch);
 
+ENIGMA_ERROR enigmaEncStr(Enigma *enigma, char message[], char encrypted[]);
+
 Enigma *enigmaInit(char *plugboardConnections, char *rotors, char *rotorsPosition, char *ringsPosition);
 void enigmaFree(Enigma *enigma);
 
