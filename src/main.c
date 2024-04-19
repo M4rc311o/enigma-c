@@ -32,7 +32,6 @@ void printPlugboardConnections(Enigma *enigma) {
     }
 }
 
-
 int main() {
     Enigma *enigma;
     Rotor rotors;
@@ -46,12 +45,6 @@ int main() {
     strcpy(enigmaRotorsNameSetting, "I II III");
     strcpy(enigmaRotorPositionSetting, "J V Z");
     strcpy(enigmaRingPositionSetting, "L X O");
-
-    // enigmaPlugboardConnectionSetting[strcspn(enigmaPlugboardConnectionSetting, "\n")] = 0;
-    // enigmaRotorsNameSetting[strcspn(enigmaRotorsNameSetting, "\n")] = 0;
-    // enigmaRotorPositionSetting[strcspn(enigmaRotorPositionSetting, "\n")] = 0;
-    // enigmaRingPositionSetting[strcspn(enigmaRingPositionSetting, "\n")] = 0;
-
 
     char *input = malloc(sizeof(char) * 1002);
 
