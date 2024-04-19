@@ -41,20 +41,19 @@ void printPlugboardConnections(Enigma *enigma) {
 
 int main() {
     Enigma *enigma;
-    enigma = enigmaInit("AB CD EF GH IJ KL", "I II III", "J V Z", "L X O");
+    char *enigmaPlugboardConnectionSetting = "AB CD EF GH IJ KL";
+    char *enigmaRotorsNameSetting = "I II III";
+    char *enigmaRotorPositionSetting = "J V Z";
+    char *enigmaRingPositionSetting = "L X O";
+    char *input = malloc(sizeof(char) * 1002);
 
     if(enigma == NULL) {
         fprintf(stderr, getEnigmaErrorStr(getLastEnigmaError()));
         return 1;
     }
 
-    char *enigmaPlugboardConnectionSetting;
-    char *enigmaRotorsNameSetting;
-    char *enigmaRotorPositionSetting;
-    char *enigmaRingPositionSetting;
-    char *input = malloc(sizeof(char) * 1002);
-
     for(;;) {
+        enigma = enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting);
         puts("======== CURRENT ENIGMA SETTINGS ========");
         printf("Plugboard connection:\t ");
         printPlugboardConnections(enigma);
