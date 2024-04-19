@@ -85,7 +85,7 @@ int main() {
             puts("\n===============\nEnigma Settings\n===============\n");
             puts("Insert Plugboard Connections in form: 'AB CD EF GH IJ KL'.");
             newSetting = ReadInput(newSetting);
-            if(plugboardInit(&enigma->plugboard, newSetting)){
+            if(enigmaInit(newSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting) == NULL){
                 fprintf(stderr,"\n!!!Wrong plugboard settings!!!\n Returning to main menu.\n");
                 break;
             }
@@ -93,7 +93,7 @@ int main() {
 
             puts("Insert 3 Rotors. You can choose from I, II, III, IV, V. Form is: 'I IV V'.");
             newSetting = ReadInput(newSetting);
-            if(rotorsInit(rotors, newSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting)){
+            if(enigmaInit(enigmaPlugboardConnectionSetting, newSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting) == NULL){
                 fprintf(stderr,"\n!!!Wrong rotor name settings!!!\n Returning to main menu.\n");
                 break;
             }
@@ -101,7 +101,7 @@ int main() {
 
             puts("Insert Position of 3 rotors. You can choose from A - Z. Form is: 'A B C'.");
             newSetting = ReadInput(newSetting);
-            if(rotorsInit(rotors, enigmaRotorsNameSetting, newSetting, enigmaRingPositionSetting)){
+            if(enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, newSetting, enigmaRingPositionSetting) == NULL){
                 fprintf(stderr,"\n!!!Wrong rotor position settings!!!\n Returning to main menu.\n");
                 break;
             }
@@ -109,7 +109,7 @@ int main() {
 
             puts("Insert Ring Position of 3 rotors. You can choose from A - Z. Form is: 'A B C'.");
             newSetting = ReadInput(newSetting);
-            if(rotorsInit(rotors, enigmaRotorsNameSetting, enigmaRotorPositionSetting, newSetting)){
+            if(enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, newSetting) == NULL){
                 fprintf(stderr,"\n!!!Wrong ring position settings!!!\n Returning to main menu.\n");
                 break;
             }
