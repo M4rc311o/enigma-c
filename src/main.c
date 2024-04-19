@@ -15,7 +15,7 @@ char *ReadInput(char *input) {
         fprintf(stderr, "Problem with input reading.");
         return NULL;
     }
-    input[strcspn(input, "\n")] = 0;  //-------------------------------------------------
+    input[strcspn(input, "\n")] = 0;  
     return input;
 }
 
