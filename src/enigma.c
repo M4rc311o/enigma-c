@@ -58,7 +58,7 @@ const char *errorStrings[] =
 
 ENIGMA_ERROR getLastEnigmaError() {
     ENIGMA_ERROR err = lastEnigmaError;
-    lastEnigmaError = ENIGMA_SUCCESS;
+    // lastEnigmaError = ENIGMA_SUCCESS; WHY?
     return err;
 }
 
@@ -381,15 +381,15 @@ char enigmaEncChar(Enigma *enigma, char ch) {
 
 ENIGMA_ERROR enigmaEncStr(Enigma *enigma, char input[], char encrypted[]) {
     int j = 0;
-
     for(int i = 0; i <= strlen(input); i++) {
-        if(input[i] != ' ') {
-            encrypted[j] = enigmaEncChar(enigma, input[i]);
-            if(encrypted[j] == 0) {
-                return lastEnigmaError;
+        if(input[i] != '\0')
+            if(input[i] != ' ') {
+                encrypted[j] = enigmaEncChar(enigma, input[i]);
+                if(encrypted[j] == 0) {
+                    return lastEnigmaError;
+                }
+                j++;
             }
-            j++;
-        }
     }
     encrypted[j] = '\0';
     lastEnigmaError = ENIGMA_SUCCESS;
