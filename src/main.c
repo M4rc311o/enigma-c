@@ -3,14 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-void ClearChar() {
-    int c;
-    while((c = getchar()) != '\n' && c != EOF);
-}
-
-char *allocateSettingChars(char *function) {
-    char *setting = malloc(sizeof(char) * 30);
-    fgets(setting, 30, stdin);
+char *allocateSettingChars(char *function, char *setting) {
     setting[strcspn(setting, "\n")] = 0;
     function = malloc(strlen(setting) + 1);
     strcpy(function, setting);
@@ -22,6 +15,7 @@ char *ReadInput(char *input) {
         fprintf(stderr, "Problem with input reading.");
         return NULL;
     }
+    input[strcspn(input, "\n")] = 0;  //-------------------------------------------------
     return input;
 }
 
@@ -41,20 +35,34 @@ void printPlugboardConnections(Enigma *enigma) {
 
 int main() {
     Enigma *enigma;
-    char *enigmaPlugboardConnectionSetting = "AB CD EF GH IJ KL";
-    char *enigmaRotorsNameSetting = "I II III";
-    char *enigmaRotorPositionSetting = "J V Z";
-    char *enigmaRingPositionSetting = "L X O";
-    char *input = malloc(sizeof(char) * 1002);
+    Rotor rotors;
+    char *newSetting = malloc(sizeof(char) * 30);
+    char *enigmaPlugboardConnectionSetting = malloc(strlen("AB CD EF GH IJ KL")+1);
+    char *enigmaRotorsNameSetting = malloc(strlen("I II III")+1);
+    char *enigmaRotorPositionSetting = malloc(strlen("J V Z")+1);
+    char *enigmaRingPositionSetting = malloc(strlen("L X O")+1);
 
-    if(enigma == NULL) {
-        fprintf(stderr, getEnigmaErrorStr(getLastEnigmaError()));
-        return 1;
-    }
+    strcpy(enigmaPlugboardConnectionSetting, "AB CD EF GH IJ KL");
+    strcpy(enigmaRotorsNameSetting, "I II III");
+    strcpy(enigmaRotorPositionSetting, "J V Z");
+    strcpy(enigmaRingPositionSetting, "L X O");
+
+    // enigmaPlugboardConnectionSetting[strcspn(enigmaPlugboardConnectionSetting, "\n")] = 0;
+    // enigmaRotorsNameSetting[strcspn(enigmaRotorsNameSetting, "\n")] = 0;
+    // enigmaRotorPositionSetting[strcspn(enigmaRotorPositionSetting, "\n")] = 0;
+    // enigmaRingPositionSetting[strcspn(enigmaRingPositionSetting, "\n")] = 0;
+
+
+    char *input = malloc(sizeof(char) * 1002);
 
     for(;;) {
         enigma = enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting);
-        puts("======== CURRENT ENIGMA SETTINGS ========");
+        if(enigma == NULL) {
+        fprintf(stderr, getEnigmaErrorStr(getLastEnigmaError()));
+        return 1;
+        }
+        
+        puts("\n======== CURRENT ENIGMA SETTINGS ========");
         printf("Plugboard connection:\t ");
         printPlugboardConnections(enigma);
         printf("%s\n", enigma->plugboard.plugboardSubstitute);
@@ -83,23 +91,42 @@ int main() {
         case 's':
             puts("\n===============\nEnigma Settings\n===============\n");
             puts("Insert Plugboard Connections in form: 'AB CD EF GH IJ KL'.");
-            enigmaPlugboardConnectionSetting = allocateSettingChars(enigmaPlugboardConnectionSetting);
+            newSetting = ReadInput(newSetting);
+            if(plugboardInit(&enigma->plugboard, newSetting)){
+                fprintf(stderr,"\n!!!Wrong plugboard settings!!!\n Returning to main menu.\n");
+                break;
+            }
+            enigmaPlugboardConnectionSetting = allocateSettingChars(enigmaPlugboardConnectionSetting, newSetting);
 
             puts("Insert 3 Rotors. You can choose from I, II, III, IV, V. Form is: 'I IV V'.");
-            enigmaRotorsNameSetting = allocateSettingChars(enigmaRotorsNameSetting);
+            newSetting = ReadInput(newSetting);
+            if(rotorsInit(rotors, newSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting)){
+                fprintf(stderr,"\n!!!Wrong rotor name settings!!!\n Returning to main menu.\n");
+                break;
+            }
+            enigmaRotorsNameSetting = allocateSettingChars(enigmaRotorsNameSetting, newSetting);
 
             puts("Insert Position of 3 rotors. You can choose from A - Z. Form is: 'A B C'.");
-            enigmaRotorPositionSetting = allocateSettingChars(enigmaRotorPositionSetting);
+            newSetting = ReadInput(newSetting);
+            if(rotorsInit(rotors, enigmaRotorsNameSetting, newSetting, enigmaRingPositionSetting)){
+                fprintf(stderr,"\n!!!Wrong rotor position settings!!!\n Returning to main menu.\n");
+                break;
+            }
+            enigmaRotorPositionSetting = allocateSettingChars(enigmaRotorPositionSetting, newSetting);
 
             puts("Insert Ring Position of 3 rotors. You can choose from A - Z. Form is: 'A B C'.");
-            enigmaRingPositionSetting = allocateSettingChars(enigmaRingPositionSetting);
+            newSetting = ReadInput(newSetting);
+            if(rotorsInit(rotors, enigmaRotorsNameSetting, enigmaRotorPositionSetting, newSetting)){
+                fprintf(stderr,"\n!!!Wrong ring position settings!!!\n Returning to main menu.\n");
+                break;
+            }
+            enigmaRingPositionSetting = allocateSettingChars(enigmaRingPositionSetting, newSetting);
 
             enigma = enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting);
             break;
         case 'x':
             puts("============= Goodbye. =============");
             return 0;
-            break;
         default:
             puts("\n!#=========== Wrong option. ===========#!\n");
         }
