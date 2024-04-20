@@ -5,6 +5,7 @@
 #include <stdbool.h>
 
 char *allocateSettingChars(char *function, char *setting) {
+    free(function);
     setting[strcspn(setting, "\n")] = 0;
     function = malloc(strlen(setting) + 1);
     strcpy(function, setting);
@@ -100,17 +101,23 @@ int main() {
             input = ReadInput(input);
             if(input[0] != '\0') {
                 enigmaInit(input, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting);
-                if(enigmaGotError()) { break; }
+                if(enigmaGotError()) {
+                    enigmaFree(enigma);
+                    break;
+                }
+                enigmaFree(enigma);
                 enigmaPlugboardConnectionSetting = allocateSettingChars(enigmaPlugboardConnectionSetting, input);
             }
             else fprintf(stdout, "Skipping plugboard settings.\n\n");
-
-
             puts("Insert 3 Rotors. You can choose from I, II, III, IV, V. Form is: 'I IV V'.");
             input = ReadInput(input);
             if(input[0] != '\0') {
                 enigmaInit(enigmaPlugboardConnectionSetting, input, enigmaRotorPositionSetting, enigmaRingPositionSetting);
-                if(enigmaGotError()) { break; }
+                if(enigmaGotError()) {
+                    enigmaFree(enigma);
+                    break;
+                }
+                enigmaFree(enigma);
                 enigmaRotorsNameSetting = allocateSettingChars(enigmaRotorsNameSetting, input);
             }
             else fprintf(stdout, "Skipping rotor name settings.\n\n");
@@ -119,8 +126,12 @@ int main() {
             input = ReadInput(input);
             if(input[0] != '\0') {
                 enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, input, enigmaRingPositionSetting);
-                if(enigmaGotError()) { break; }
+                if(enigmaGotError()) {
+                    enigmaFree(enigma);
+                    break;
+                }
                 enigmaRotorPositionSetting = allocateSettingChars(enigmaRotorPositionSetting, input);
+                enigmaFree(enigma);
             }
             else fprintf(stdout, "Skipping rotor position settings.\n\n");
 
@@ -128,8 +139,12 @@ int main() {
             input = ReadInput(input);
             if(input[0] != '\0') {
                 enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, input);
-                if(enigmaGotError()) { break; }
+                if(enigmaGotError()) {
+                    enigmaFree(enigma);
+                    break;
+                }
                 enigmaRingPositionSetting = allocateSettingChars(enigmaRingPositionSetting, input);
+                enigmaFree(enigma);
             }
             else fprintf(stdout, "Skipping ring position settings.\n\n");
 
