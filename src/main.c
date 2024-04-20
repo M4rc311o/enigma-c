@@ -57,9 +57,9 @@ int main() {
     strcpy(enigmaRotorPositionSetting, "J V Z");
     strcpy(enigmaRingPositionSetting, "L X O");
 
+    enigma = enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting);
     for(;;) {
         Enigma *enigmaTmp;
-        enigma = enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting);
         if(enigma == NULL) {
             fprintf(stderr, getEnigmaErrorStr(getLastEnigmaError()));
             return 1;
@@ -107,7 +107,7 @@ int main() {
                     enigmaFree(enigmaTmp);
                     break;
                 }
-                enigmaFree(enigma);
+                enigmaFree(enigmaTmp);
                 enigmaPlugboardConnectionSetting = allocateSettingChars(enigmaPlugboardConnectionSetting, input);
             }
             else fprintf(stdout, "Skipping plugboard settings.\n\n");
@@ -150,6 +150,7 @@ int main() {
             }
             else fprintf(stdout, "Skipping ring position settings.\n\n");
 
+            enigmaFree(enigma);
             enigma = enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting);
             break;
         case 'x':
