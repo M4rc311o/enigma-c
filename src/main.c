@@ -62,7 +62,7 @@ int main() {
             enigma = enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting);
             if(enigma == NULL) {
                 fprintf(stderr, getEnigmaErrorStr(getLastEnigmaError()));
-                return 1;
+                goto freeMemory;
             }
         }
         puts("\n======== CURRENT ENIGMA SETTINGS ========");
