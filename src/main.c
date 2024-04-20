@@ -42,6 +42,7 @@ bool enigmaGotError() {
     return false;
 }
 
+
 int main() {
     Enigma *enigma;
     char *input = malloc(sizeof(char) * 1005);
@@ -57,6 +58,7 @@ int main() {
     strcpy(enigmaRingPositionSetting, "L X O");
 
     for(;;) {
+        Enigma *enigmaTmp;
         enigma = enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting);
         if(enigma == NULL) {
             fprintf(stderr, getEnigmaErrorStr(getLastEnigmaError()));
@@ -100,9 +102,9 @@ int main() {
             puts("Insert Plugboard Connections in form: 'AB CD EF GH IJ KL'.");
             input = ReadInput(input);
             if(input[0] != '\0') {
-                enigmaInit(input, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting);
+                enigmaTmp = enigmaInit(input, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting);
                 if(enigmaGotError()) {
-                    enigmaFree(enigma);
+                    enigmaFree(enigmaTmp);
                     break;
                 }
                 enigmaFree(enigma);
@@ -112,12 +114,12 @@ int main() {
             puts("Insert 3 Rotors. You can choose from I, II, III, IV, V. Form is: 'I IV V'.");
             input = ReadInput(input);
             if(input[0] != '\0') {
-                enigmaInit(enigmaPlugboardConnectionSetting, input, enigmaRotorPositionSetting, enigmaRingPositionSetting);
+                enigmaTmp = enigmaInit(enigmaPlugboardConnectionSetting, input, enigmaRotorPositionSetting, enigmaRingPositionSetting);
                 if(enigmaGotError()) {
-                    enigmaFree(enigma);
+                    enigmaFree(enigmaTmp);
                     break;
                 }
-                enigmaFree(enigma);
+                enigmaFree(enigmaTmp);
                 enigmaRotorsNameSetting = allocateSettingChars(enigmaRotorsNameSetting, input);
             }
             else fprintf(stdout, "Skipping rotor name settings.\n\n");
@@ -125,13 +127,13 @@ int main() {
             puts("Insert Position of 3 rotors. You can choose from A - Z. Form is: 'A B C'.");
             input = ReadInput(input);
             if(input[0] != '\0') {
-                enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, input, enigmaRingPositionSetting);
+                enigmaTmp = enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, input, enigmaRingPositionSetting);
                 if(enigmaGotError()) {
-                    enigmaFree(enigma);
+                    enigmaFree(enigmaTmp);
                     break;
                 }
                 enigmaRotorPositionSetting = allocateSettingChars(enigmaRotorPositionSetting, input);
-                enigmaFree(enigma);
+                enigmaFree(enigmaTmp);
             }
             else fprintf(stdout, "Skipping rotor position settings.\n\n");
 
@@ -140,11 +142,11 @@ int main() {
             if(input[0] != '\0') {
                 enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, input);
                 if(enigmaGotError()) {
-                    enigmaFree(enigma);
+                    enigmaFree(enigmaTmp);
                     break;
                 }
                 enigmaRingPositionSetting = allocateSettingChars(enigmaRingPositionSetting, input);
-                enigmaFree(enigma);
+                enigmaFree(enigmaTmp);
             }
             else fprintf(stdout, "Skipping ring position settings.\n\n");
 
@@ -152,17 +154,19 @@ int main() {
             break;
         case 'x':
             puts("============= Goodbye. =============");
-            return 0;
+            goto freeMemory;
         default:
             puts("\n!#=========== Wrong option. ===========#!\n");
         }
     }
 
+freeMemory:
     free(input);
     free(enigmaPlugboardConnectionSetting);
     free(enigmaRotorsNameSetting);
     free(enigmaRotorPositionSetting);
     free(enigmaRingPositionSetting);
     enigmaFree(enigma);
+
     return 0;
 }
