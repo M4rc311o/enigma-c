@@ -33,17 +33,6 @@ void printPlugboardConnections(Enigma *enigma) {
     }
 }
 
-void enigmaCryptInput(Enigma *enigma, char *input) {
-    char output[1000];
-    if(enigmaEncStr(enigma, ReadInput(input), output) != 0) {
-        fprintf(stderr, "Error: %s", getEnigmaErrorStr(getLastEnigmaError()));
-        fprintf(stdout, "\nReturning to main menu.\n");
-        return;
-    }
-    fprintf(stdout, "Encrypted text is: %s\n\n", output);
-    return;
-}
-
 bool enigmaGotError() {
     if(getLastEnigmaError() != 0) {
         fprintf(stderr, "\nError: %s\nReturning to main menu.\n", getEnigmaErrorStr(getLastEnigmaError()));
@@ -59,6 +48,7 @@ int main() {
     char *enigmaRotorsNameSetting = malloc(strlen("I II III") + 1);
     char *enigmaRotorPositionSetting = malloc(strlen("J V Z") + 1);
     char *enigmaRingPositionSetting = malloc(strlen("L X O") + 1);
+    char output[1000];
 
     strcpy(enigmaPlugboardConnectionSetting, "AB CD EF GH IJ KL");
     strcpy(enigmaRotorsNameSetting, "I II III");
@@ -87,12 +77,22 @@ int main() {
         case 'a':
             puts("\n=================\nEnigma encryption\n=================\n");
             puts("Input text to encrypt [max. 1000 symbols]:");
-            enigmaCryptInput(enigma, input);
+            if(enigmaEncStr(enigma, ReadInput(input), output) != 0) {
+                fprintf(stderr, "Error: %s", getEnigmaErrorStr(getLastEnigmaError()));
+                fprintf(stdout, "\nReturning to main menu.\n");
+                break;
+            }
+            fprintf(stdout, "Encrypted text is: %s\n\n", output);
             break;
         case 'b':
             puts("\n=================\nEnigma decryption\n=================\n");
             puts("Input text to decrypt [max. 1000 symbols]:");
-            enigmaCryptInput(enigma, input);
+            if(enigmaEncStr(enigma, ReadInput(input), output) != 0) {
+                fprintf(stderr, "Error: %s", getEnigmaErrorStr(getLastEnigmaError()));
+                fprintf(stdout, "\nReturning to main menu.\n");
+                break;
+            }
+            fprintf(stdout, "Decrypted text is: %s\n\n", output);
             break;
         case 's':
             puts("\n===============\nEnigma Settings\n===============\n");
