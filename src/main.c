@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 char *allocateSettingChars(char *function, char *setting) {
     setting[strcspn(setting, "\n")] = 0;
@@ -30,6 +31,25 @@ void printPlugboardConnections(Enigma *enigma) {
             alreadyPrinted[substitution] = 1;
         }
     }
+}
+
+void enigmaCryptInput(Enigma *enigma, char *input) {
+    char output[1000];
+    if(enigmaEncStr(enigma, ReadInput(input), output) != 0) {
+        fprintf(stderr, "Error: %s", getEnigmaErrorStr(getLastEnigmaError()));
+        fprintf(stdout, "\nReturning to main menu.\n");
+        return;
+    }
+    fprintf(stdout, "Encrypted text is: %s\n\n", output);
+    return;
+}
+
+bool enigmaGotError() {
+    if(getLastEnigmaError() != 0) {
+        fprintf(stderr, "\nError: %s\nReturning to main menu.\n", getEnigmaErrorStr(getLastEnigmaError()));
+        return true;
+    }
+    return false;
 }
 
 int main() {
@@ -64,26 +84,15 @@ int main() {
         input = ReadInput(input);
 
         switch(input[0]) {
-            char output[1000];
         case 'a':
             puts("\n=================\nEnigma encryption\n=================\n");
             puts("Input text to encrypt [max. 1000 symbols]:");
-            if(enigmaEncStr(enigma, ReadInput(input), output) != 0) {
-                fprintf(stderr, "Error: %s", getEnigmaErrorStr(getLastEnigmaError()));
-                fprintf(stdout, "\nReturning to main menu.\n");
-                break;
-            }
-            fprintf(stdout, "Encrypted text is: %s\n\n", output);
+            enigmaCryptInput(enigma, input);
             break;
         case 'b':
             puts("\n=================\nEnigma decryption\n=================\n");
             puts("Input text to decrypt [max. 1000 symbols]:");
-            if(enigmaEncStr(enigma, ReadInput(input), output) != 0) {
-                fprintf(stderr, "Error %s", getEnigmaErrorStr(getLastEnigmaError()));
-                fprintf(stdout, "\nReturning to main menu.\n");
-                break;
-            }
-            fprintf(stdout, "Decrypted text is: %s\n\n", output);
+            enigmaCryptInput(enigma, input);
             break;
         case 's':
             puts("\n===============\nEnigma Settings\n===============\n");
@@ -91,10 +100,7 @@ int main() {
             input = ReadInput(input);
             if(input[0] != '\0') {
                 enigmaInit(input, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting);
-                if(getLastEnigmaError() != 0) {
-                    fprintf(stderr, "\nError: %s\nReturning to main menu.\n", getEnigmaErrorStr(getLastEnigmaError()));
-                    break;
-                }
+                if(enigmaGotError()) { break; }
                 enigmaPlugboardConnectionSetting = allocateSettingChars(enigmaPlugboardConnectionSetting, input);
             }
             else fprintf(stdout, "Skipping plugboard settings.\n\n");
@@ -104,10 +110,7 @@ int main() {
             input = ReadInput(input);
             if(input[0] != '\0') {
                 enigmaInit(enigmaPlugboardConnectionSetting, input, enigmaRotorPositionSetting, enigmaRingPositionSetting);
-                if(getLastEnigmaError() != 0) {
-                    fprintf(stderr, "\nError: %s\nReturning to main menu.\n", getEnigmaErrorStr(getLastEnigmaError()));
-                    break;
-                }
+                if(enigmaGotError()) { break; }
                 enigmaRotorsNameSetting = allocateSettingChars(enigmaRotorsNameSetting, input);
             }
             else fprintf(stdout, "Skipping rotor name settings.\n\n");
@@ -116,10 +119,7 @@ int main() {
             input = ReadInput(input);
             if(input[0] != '\0') {
                 enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, input, enigmaRingPositionSetting);
-                if(getLastEnigmaError() != 0) {
-                    fprintf(stderr, "\nError: %s\nReturning to main menu.\n", getEnigmaErrorStr(getLastEnigmaError()));
-                    break;
-                }
+                if(enigmaGotError()) { break; }
                 enigmaRotorPositionSetting = allocateSettingChars(enigmaRotorPositionSetting, input);
             }
             else fprintf(stdout, "Skipping rotor position settings.\n\n");
@@ -128,10 +128,7 @@ int main() {
             input = ReadInput(input);
             if(input[0] != '\0') {
                 enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, input);
-                if(getLastEnigmaError() != 0) {
-                    fprintf(stderr, "\nError: %s\nReturning to main menu.\n", getEnigmaErrorStr(getLastEnigmaError()));
-                    break;
-                }
+                if(enigmaGotError()) { break; }
                 enigmaRingPositionSetting = allocateSettingChars(enigmaRingPositionSetting, input);
             }
             else fprintf(stdout, "Skipping ring position settings.\n\n");
