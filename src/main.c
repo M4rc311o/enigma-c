@@ -107,7 +107,6 @@ int main() {
                     enigmaFree(enigma);
                     break;
                 }
-                enigmaFree(enigma);
                 enigmaPlugboardConnectionSetting = allocateSettingChars(enigmaPlugboardConnectionSetting, input);
             }
             else fprintf(stdout, "Skipping plugboard settings.\n\n");
@@ -119,7 +118,6 @@ int main() {
                     enigmaFree(enigma);
                     break;
                 }
-                enigmaFree(enigma);
                 enigmaRotorsNameSetting = allocateSettingChars(enigmaRotorsNameSetting, input);
             }
             else fprintf(stdout, "Skipping rotor name settings.\n\n");
@@ -133,7 +131,6 @@ int main() {
                     break;
                 }
                 enigmaRotorPositionSetting = allocateSettingChars(enigmaRotorPositionSetting, input);
-                enigmaFree(enigma);
             }
             else fprintf(stdout, "Skipping rotor position settings.\n\n");
 
@@ -146,10 +143,10 @@ int main() {
                     break;
                 }
                 enigmaRingPositionSetting = allocateSettingChars(enigmaRingPositionSetting, input);
-                enigmaFree(enigma);
             }
             else fprintf(stdout, "Skipping ring position settings.\n\n");
 
+            enigmaFree(enigma);
             enigma = enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting);
             break;
         case 'x':
