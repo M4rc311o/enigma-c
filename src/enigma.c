@@ -36,6 +36,8 @@ const char *const reflectorNames[] = {"Reflector A", "Reflector B", "Reflector C
 
 static ENIGMA_ERROR lastEnigmaError = ENIGMA_SUCCESS;
 
+char delim[] = " ";
+
 const char *errorStrings[] =
 {
     "ENIGMA_SUCCESS",
@@ -101,7 +103,7 @@ void enigmaFree(Enigma *enigma) {
 ENIGMA_ERROR plugboardInit(Plugboard *plugboard, char *plugboardConnections) {
     char *connection;
     int connectionCount = 0;
-
+    char *saveConnection = NULL;
     if(plugboardConnections == NULL) {
         lastEnigmaError = ENIGMA_INIT_NULL_INPUT;
         return lastEnigmaError;
@@ -120,7 +122,7 @@ ENIGMA_ERROR plugboardInit(Plugboard *plugboard, char *plugboardConnections) {
     strcpy(tmpStr, plugboardConnections);
     for(int i = 0; i < ALPHABET_SIZE; i++) plugboard->plugboardSubstitute[i] = i;
 
-    connection = strtok(tmpStr, " ");
+    connection = strtok_r(tmpStr, delim, &saveConnection);
     while(connection) {
         connectionCount++;
         strupr(connection);
@@ -148,7 +150,7 @@ ENIGMA_ERROR plugboardInit(Plugboard *plugboard, char *plugboardConnections) {
         used[plug1] = true;
         used[plug2] = true;
 
-        connection = strtok(NULL, " ");
+        connection = strtok_r(NULL, delim, &saveConnection);
     }
 
     if(connectionCount != CONNECTIONS_COUNT) {
@@ -195,9 +197,9 @@ ENIGMA_ERROR rotorsInit(Rotor rotors[], char *rotorsNames, char *rotorsPositons,
     strcpy(tmpRotorP, rotorsPositons);
     strcpy(tmpRingP, ringPositions);
 
-    rotor = strtok_r(tmpRotor, " ", &saveRotor);
-    rotorP = strtok_r(tmpRotorP, " ", &saveRotorP);
-    ringP = strtok_r(tmpRingP, " ", &saveRingP);
+    rotor = strtok_r(tmpRotor, delim, &saveRotor);
+    rotorP = strtok_r(tmpRotorP, delim, &saveRotorP);
+    ringP = strtok_r(tmpRingP, delim, &saveRingP);
 
     bool usedRotor[AVAILABLE_ROTORS] = {false};
     char notchP;
@@ -257,9 +259,9 @@ ENIGMA_ERROR rotorsInit(Rotor rotors[], char *rotorsNames, char *rotorsPositons,
 
         if(rotorInit(&rotors[numOfRotor - 1], selectedAlphabet, rotorP[0], ringP[0], notchP)) return lastEnigmaError;
 
-        rotor = strtok_r(NULL, " ", &saveRotor);
-        rotorP = strtok_r(NULL, " ", &saveRotorP);
-        ringP = strtok_r(NULL, " ", &saveRingP);
+        rotor = strtok_r(NULL, delim, &saveRotor);
+        rotorP = strtok_r(NULL, delim, &saveRotorP);
+        ringP = strtok_r(NULL, delim, &saveRingP);
     }
 
     if(numOfRotor != ROTOR_COUNT) {
