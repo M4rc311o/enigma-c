@@ -11,7 +11,7 @@ char *allocateSettingChars(char *function, char *setting) {
 }
 
 char *ReadInput(char *input) {
-    if(fgets(input, 1002, stdin) == NULL) {
+    if(fgets(input, 1005, stdin) == NULL) {
         fprintf(stderr, "Problem with input reading.");
         return NULL;
     }
@@ -34,7 +34,7 @@ void printPlugboardConnections(Enigma *enigma) {
 
 int main() {
     Enigma *enigma;
-    char *input = malloc(sizeof(char) * 1002);
+    char *input = malloc(sizeof(char) * 1005);
     char *enigmaPlugboardConnectionSetting = malloc(strlen("AB CD EF GH IJ KL") + 1);
     char *enigmaRotorsNameSetting = malloc(strlen("I II III") + 1);
     char *enigmaRotorPositionSetting = malloc(strlen("J V Z") + 1);
@@ -55,8 +55,7 @@ int main() {
         puts("\n======== CURRENT ENIGMA SETTINGS ========");
         printf("Plugboard connection:\t ");
         printPlugboardConnections(enigma);
-        printf("%s\n", enigma->plugboard.plugboardSubstitute);
-        printf("Rotor names: \t\t %s %s %s\n", enigma->rotors[0].name, enigma->rotors[1].name, enigma->rotors[2].name);
+        printf("\nRotor names: \t\t %s %s %s\n", enigma->rotors[0].name, enigma->rotors[1].name, enigma->rotors[2].name);
         printf("Rotor positions:\t %c %c %c\n", 'A' + enigma->rotors[0].rotorPosition, 'A' + enigma->rotors[1].rotorPosition, 'A' + enigma->rotors[2].rotorPosition);
         printf("Rotor ring pos.:\t %c %c %c\n", 'A' + enigma->rotors[0].ringPosition, 'A' + enigma->rotors[1].ringPosition, 'A' + enigma->rotors[2].ringPosition);
 
