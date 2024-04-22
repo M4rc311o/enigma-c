@@ -36,9 +36,9 @@ const char *const reflectorNames[] = {"Reflector A", "Reflector B", "Reflector C
 
 static ENIGMA_ERROR lastEnigmaError = ENIGMA_SUCCESS;
 
-char delim[] = " ";
+const char delim[] = " ";
 
-const char *errorStrings[] =
+const char *const errorStrings[] =
 {
     "ENIGMA_SUCCESS",
     "ENIGMA_PLUGBOARD_TOO_MANY_CONNECTIONS",
@@ -55,7 +55,9 @@ const char *errorStrings[] =
     "ENIGMA_ROTORS_TOO_FEW_ROTORS",
     "ENIGMA_ROTORS_TOO_FEW_ROTOR_POSITIONS",
     "ENIGMA_ROTORS_TOO_FEW_RING_POSITIONS",
-    "ENIGMA_ENC_CHAR_NOT_ALPHA"
+    "ENIGMA_ENC_CHAR_NOT_ALPHA",
+    "ENIGMA_UNSUCCESSFUL_MEM_ALLOCATION",
+    "ENIGMA_INIT_NULL_INPUT"
 };
 
 ENIGMA_ERROR getLastEnigmaError() {
@@ -110,7 +112,7 @@ ENIGMA_ERROR plugboardInit(Plugboard *plugboard, char *plugboardConnections) {
     }
 
     bool used[ALPHABET_SIZE] = {false};
-    int plugBlength = strlen(plugboardConnections) + 1;
+    size_t plugBlength = strlen(plugboardConnections) + 1;
     char *tmpStr = (char *)malloc(plugBlength * sizeof(char));
 
     if(tmpStr == NULL) {
@@ -179,9 +181,9 @@ ENIGMA_ERROR rotorsInit(Rotor rotors[], char *rotorsNames, char *rotorsPositons,
         return lastEnigmaError;
     }
 
-    int rotorNlength = strlen(rotorsNames) + 1;
-    int rotorPlength = strlen(rotorsPositons) + 1;
-    int ringPlength = strlen(ringPositions) + 1;
+    size_t rotorNlength = strlen(rotorsNames) + 1;
+    size_t rotorPlength = strlen(rotorsPositons) + 1;
+    size_t ringPlength = strlen(ringPositions) + 1;
 
     char *tmpRotor = (char *)malloc(rotorNlength * sizeof(char));
     char *tmpRotorP = (char *)malloc(rotorPlength * sizeof(char));
