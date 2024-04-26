@@ -76,26 +76,22 @@ Enigma *enigmaInit(char *plugboardConnections, char *rotorsNames, char *rotorsPo
     if(enigma == NULL)
         return NULL;
     if(plugboardInit(&enigma->plugboard, plugboardConnections)) {
-        enigmaFree(enigma);
+        free(enigma);
         return NULL;
     }
     if(rotorsInit(enigma->rotors, rotorsNames, rotorsPosition, ringsPosition)) {
-        enigmaFree(enigma);
+        free(enigma);
         return NULL;
     }
 
     // Reflector B
     enigma->reflector.name = reflectorNames[1];
     if(reflectorInit(&enigma->reflector, reflectorAlphabets[1])) {
-        enigmaFree(enigma);
+        free(enigma);
         return NULL;
     }
 
     return enigma;
-}
-
-void enigmaFree(Enigma *enigma) {
-    free(enigma);
 }
 
 ENIGMA_ERROR plugboardInit(Plugboard *plugboard, char *plugboardConnections) {
@@ -381,15 +377,14 @@ char enigmaEncChar(Enigma *enigma, char ch) {
 
 ENIGMA_ERROR enigmaEncStr(Enigma *enigma, char input[], char encrypted[]) {
     int j = 0;
-    for(int i = 0; i <= strlen(input); i++) {
-        if(input[i] != '\0')
-            if(input[i] != ' ') {
-                encrypted[j] = enigmaEncChar(enigma, input[i]);
-                if(encrypted[j] == 0) {
-                    return lastEnigmaError;
-                }
-                j++;
+    for(int i = 0; i < strlen(input); i++) {
+        if(input[i] != ' ') {
+            encrypted[j] = enigmaEncChar(enigma, input[i]);
+            if(encrypted[j] == 0) {
+                return lastEnigmaError;
             }
+            j++;
+        }
     }
     encrypted[j] = '\0';
     lastEnigmaError = ENIGMA_SUCCESS;

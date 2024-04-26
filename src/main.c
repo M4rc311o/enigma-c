@@ -120,10 +120,10 @@ int main() {
             tmpEnigma = enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting);
             if(tmpEnigma == NULL) {
                 fprintf(stderr, "\nError: %s\nReturning to main menu.", getEnigmaErrorStr(getLastEnigmaError()));
-                enigmaFree(tmpEnigma);
+                free(tmpEnigma);
                 break;
             }
-            enigmaFree(tmpEnigma);
+            free(tmpEnigma);
             enigma = enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting);
             break;
         case 'x':
@@ -140,7 +140,7 @@ freeMemory:
     free(enigmaRotorsNameSetting);
     free(enigmaRotorPositionSetting);
     free(enigmaRingPositionSetting);
-    enigmaFree(enigma);
+    free(enigma);
 
     return 0;
 }
