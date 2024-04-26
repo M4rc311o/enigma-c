@@ -58,7 +58,7 @@ const char *errorStrings[] =
 
 ENIGMA_ERROR getLastEnigmaError() {
     ENIGMA_ERROR err = lastEnigmaError;
-    // lastEnigmaError = ENIGMA_SUCCESS; WHY?
+    lastEnigmaError = ENIGMA_SUCCESS;
     return err;
 }
 
@@ -76,22 +76,26 @@ Enigma *enigmaInit(char *plugboardConnections, char *rotorsNames, char *rotorsPo
     if(enigma == NULL)
         return NULL;
     if(plugboardInit(&enigma->plugboard, plugboardConnections)) {
-        free(enigma);
+        enigmaFree(enigma);
         return NULL;
     }
     if(rotorsInit(enigma->rotors, rotorsNames, rotorsPosition, ringsPosition)) {
-        free(enigma);
+        enigmaFree(enigma);
         return NULL;
     }
 
     // Reflector B
     enigma->reflector.name = reflectorNames[1];
     if(reflectorInit(&enigma->reflector, reflectorAlphabets[1])) {
-        free(enigma);
+        enigmaFree(enigma);
         return NULL;
     }
 
     return enigma;
+}
+
+void enigmaFree(Enigma *enigma) {
+    free(enigma);
 }
 
 ENIGMA_ERROR plugboardInit(Plugboard *plugboard, char *plugboardConnections) {

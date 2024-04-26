@@ -123,7 +123,7 @@ int main() {
                 free(tmpEnigma);
                 break;
             }
-            free(tmpEnigma);
+            enigmaFree(tmpEnigma);
             enigma = enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting);
             break;
         case 'x':
@@ -140,7 +140,7 @@ freeMemory:
     free(enigmaRotorsNameSetting);
     free(enigmaRotorPositionSetting);
     free(enigmaRingPositionSetting);
-    free(enigma);
+    enigmaFree(enigma);
 
     return 0;
 }
