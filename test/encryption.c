@@ -9,13 +9,18 @@ void encryptionCharTest() {
 
     for(int x = 0;x < (sizeof(input) - 1);x++) {
         Enigma *enigma = enigmaInit("AB CD EF GH IJ KL", "I II III", "A B C", "G H I");
+        CU_ASSERT_PTR_NOT_NULL(enigma);
         CU_ASSERT_EQUAL(enigmaEncChar(enigma, input[x]), expected[x]);
-        free(enigma);
+        enigmaFree(enigma);
     }
+}
 
+void encryptionInvalidChar() {
     Enigma *enigma = enigmaInit("AB CD EF GH IJ KL", "I II III", "A B C", "G H I");
-    CU_ASSERT_EQUAL(enigmaEncChar(enigma, ' '), ENIGMA_ENC_CHAR_NOT_ALPHA);
-    free(enigma);
+    CU_ASSERT_PTR_NOT_NULL(enigma);
+    CU_ASSERT_FALSE(enigmaEncChar(enigma, '%'));
+    CU_ASSERT_EQUAL(getLastEnigmaError(), ENIGMA_ENC_CHAR_NOT_ALPHA);
+    enigmaFree(enigma);
 }
 
 void encryptionStrTest() {
@@ -23,11 +28,12 @@ void encryptionStrTest() {
     char expected[] = "EEFKTVZSHVTAJXSDEXPIQFPZDOVCPLJDFYOQGUIAHEAWNUNVVCXCEYDLKKFHWJNIGFOMZQMVBXDBATYUKZQCYLWVHPEODMDQLRYWHPGBYLYNBKAYJZJYCBMCYDWWABCJAQFZQGQJMJLQWICEMNUGMEPQBGKYCYVEOUJKZQJDVNNBBLBYIEYUWXKKEAIGGBGBEEYGVDMMHFEBIHEEAAUKWIALGEKYMGWVRDAYDXZGNJFYSMPENIUHYQKRVHADDZZPUPURTJMCCULVQAZBLVMRQUHPEJROJBBOGVNBVNKRVGFPFJVPWWMYBGNMWQSOGPJGMUNSGXGWLUCJVSYWHNTGBRWEHDTBAFKKNVQMZOWCRFKGAUITTJWKIQRMKINWYILZEPZKLZXOHMVZCQLFNLSPKSBTIDRGVELFMKKZDRNEYZHGIGJVLARBZSBXMIUGGZTZUOBGKTGHPJJHRDGXJGOYLGUYYPPPIJJLEEORLAJHNRGOARKCPQCPTSCLTTVJRRNVEIHGEVLDZMJHFUBXEFWPVPBVHEWQWDINUQEPESKYRTRSMDJZMUSEOTBPKTZKSIFZBCZQIICLWVOITEGXNXBRPQLDWWNUYQUUWCQOLMBHDGPQEEQGVCTCWATDMUPCAHBQSOKMKWYGDGDITDLEWBBFFNNRXFCGURSKVVRDERICEK";
     char encrypted[1000];
     Enigma *enigma = enigmaInit("QR SX VI OC PD KL", "V II IV", "C X Z", "Z Y X");
+    CU_ASSERT_PTR_NOT_NULL(enigma);
     enigmaEncStr(enigma, input, encrypted);
     for(int x = 0;x < sizeof(input);x++) {
         CU_ASSERT_EQUAL(encrypted[x], expected[x]);
     }
-    free(enigma);
+    enigmaFree(enigma);
 }
 
 
@@ -41,6 +47,11 @@ CU_ErrorCode encryptionSuiteFunction() {
     }
 
     if(CU_add_test(encryptionSuite, "Character encryption test", encryptionCharTest) == NULL) {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    if(CU_add_test(encryptionSuite, "Invalid character encryption test", encryptionInvalidChar) == NULL) {
         CU_cleanup_registry();
         return CU_get_error();
     }
