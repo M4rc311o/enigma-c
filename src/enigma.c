@@ -18,6 +18,7 @@ int plugboardEncChar(Plugboard plugboard, int pos);
 int rotorsEncCharRightToLeft(Rotor rotors[], int pos);
 int rotorsEncCharLeftToRight(Rotor rotors[], int pos);
 int reflectorEncChar(Reflector reflector, int pos);
+char *strToUpper(char *str);
 
 const char rotorI[ALPHABET_SIZE] = {'E', 'K', 'M', 'F', 'L', 'G', 'D', 'Q', 'V', 'Z', 'N', 'T', 'O', 'W', 'Y', 'H', 'X', 'U', 'S', 'P', 'A', 'I', 'B', 'R', 'C', 'J'};
 const char rotorII[ALPHABET_SIZE] = {'A', 'J', 'D', 'K', 'S', 'I', 'R', 'U', 'X', 'B', 'L', 'H', 'W', 'T', 'M', 'C', 'Q', 'G', 'Z', 'N', 'P', 'Y', 'F', 'V', 'O', 'E'};
@@ -80,18 +81,18 @@ Enigma *enigmaInit(char *plugboardConnections, char *rotorsNames, char *rotorsPo
     if(enigma == NULL)
         return NULL;
     if(plugboardInit(&enigma->plugboard, plugboardConnections)) {
-        enigmaFree(enigma);
+        free(enigma);
         return NULL;
     }
     if(rotorsInit(enigma->rotors, rotorsNames, rotorsPosition, ringsPosition)) {
-        enigmaFree(enigma);
+        free(enigma);
         return NULL;
     }
 
     // Reflector B
     enigma->reflector.name = reflectorNames[1];
     if(reflectorInit(&enigma->reflector, reflectorAlphabets[1])) {
-        enigmaFree(enigma);
+        free(enigma);
         return NULL;
     }
 
@@ -127,7 +128,7 @@ ENIGMA_ERROR plugboardInit(Plugboard *plugboard, char *plugboardConnections) {
     connection = strtok_r(tmpStr, delim, &saveConnection);
     while(connection) {
         connectionCount++;
-        strupr(connection);
+        strToUpper(connection);
         if(connectionCount > CONNECTIONS_COUNT) {
             lastEnigmaError = ENIGMA_PLUGBOARD_TOO_MANY_CONNECTIONS;
             return lastEnigmaError;
@@ -228,9 +229,9 @@ ENIGMA_ERROR rotorsInit(Rotor rotors[], char *rotorsNames, char *rotorsPositons,
             return lastEnigmaError;
         }
 
-        strupr(rotor);
-        strupr(rotorP);
-        strupr(ringP);
+        strToUpper(rotor);
+        strToUpper(rotorP);
+        strToUpper(ringP);
 
         for(int i = 0; i < AVAILABLE_ROTORS; i++) {
             if(strcmp(rotor, rotorNames[i]) == 0) {
@@ -387,8 +388,8 @@ char enigmaEncChar(Enigma *enigma, char ch) {
 
 ENIGMA_ERROR enigmaEncStr(Enigma *enigma, char input[], char encrypted[]) {
     int j = 0;
-
-    for(int i = 0; i <= strlen(input); i++) {
+    int inputLenght = strlen(input);
+    for(int i = 0; i < inputLenght; i++) {
         if(input[i] != ' ') {
             encrypted[j] = enigmaEncChar(enigma, input[i]);
             if(encrypted[j] == 0) {
@@ -400,4 +401,11 @@ ENIGMA_ERROR enigmaEncStr(Enigma *enigma, char input[], char encrypted[]) {
     encrypted[j] = '\0';
     lastEnigmaError = ENIGMA_SUCCESS;
     return ENIGMA_SUCCESS;
+}
+
+char *strToUpper(char *str) {
+    for(int c = 0; str[c] != 0; c++) {
+        str[c] = toupper(str[c]);
+    }
+    return str;
 }

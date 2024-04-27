@@ -11,6 +11,11 @@
     "C_Cpp.vcFormat.space.pointerReferenceAlignment": "right",
     "C_Cpp.vcFormat.space.withinInitializerListBraces": false,
     "files.associations": {
-        "enigma.h": "c"
+        "enigma.h": "c",
+        "basic.h": "c",
+        "enigmaerrors.h": "c",
+        "stdlib.h": "c",
+        "stdio.h": "c",
+        "string.h": "c"
     }
 }
