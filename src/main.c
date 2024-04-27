@@ -37,7 +37,8 @@ int main() {
             while((c = getchar()) != '\n' && c != EOF) {
                 char ec = enigmaEncChar(enigma, c);
                 if(ec == 0) {
-                    fprintf(stderr, "\nError: %s\nReturning to main menu.", getEnigmaErrorStr(getLastEnigmaError()));
+                    fprintf(stderr, "\nError: %s\nReturning to main menu.\n", getEnigmaErrorStr(getLastEnigmaError()));
+                    while((c = getchar()) != '\n' && c != EOF);
                     break;
                 }
                 printf("%c", ec);
