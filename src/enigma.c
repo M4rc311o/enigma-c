@@ -117,6 +117,7 @@ ENIGMA_ERROR plugboardInit(Plugboard *plugboard, char *plugboardConnections) {
     char *tmpStr = (char *)malloc(plugBlength * sizeof(char));
 
     if(tmpStr == NULL) {
+        free(tmpStr);
         lastEnigmaError = ENIGMA_UNSUCCESSFUL_MEM_ALLOCATION;
         return lastEnigmaError;
 
@@ -130,18 +131,22 @@ ENIGMA_ERROR plugboardInit(Plugboard *plugboard, char *plugboardConnections) {
         connectionCount++;
         strToUpper(connection);
         if(connectionCount > CONNECTIONS_COUNT) {
+            free(tmpStr);
             lastEnigmaError = ENIGMA_PLUGBOARD_TOO_MANY_CONNECTIONS;
             return lastEnigmaError;
         }
         if(strlen(connection) != 2) {
+            free(tmpStr);
             lastEnigmaError = ENIGMA_PLUGBOARD_WRONG_CONNECTION_LENGTH;
             return lastEnigmaError;
         }
         if(!isalpha(connection[0]) || !isalpha(connection[1])) {
+            free(tmpStr);
             lastEnigmaError = ENIGMA_PLUGBOARD_CONNECTION_NOT_ALPHA;
             return lastEnigmaError;
         }
         if(used[connection[0] - 'A'] || used[connection[1] - 'A'] || (connection[0] - 'A') == (connection[1] - 'A')) {
+            free(tmpStr);
             lastEnigmaError = ENIGMA_PLUGBOARD_CONNECTION_ALREADY_USED;
             return lastEnigmaError;
         }
