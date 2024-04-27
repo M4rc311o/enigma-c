@@ -1,24 +1,172 @@
 #include "../inc/enigma.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdbool.h>
+#include <string.h>
 
-char *allocateSettingChars(char *function, char *setting) {
-    free(function);
-    setting[strcspn(setting, "\n")] = 0;
-    function = malloc(strlen(setting) + 1);
-    strcpy(function, setting);
-    return function;
-}
+void printPlugboardConnections(Enigma *enigma);
 
-char *ReadInput(char *input) {
-    if(fgets(input, 1005, stdin) == NULL) {
-        fprintf(stderr, "Problem with input reading.");
-        return NULL;
+int main() {
+    Enigma *enigma = NULL;
+    enigma = enigmaInit("AB CD EF GH IJ KL", "I II III", "J V Z", "L X O");
+    if(enigma == NULL) {
+        fprintf(stderr, "\nError: %s", getEnigmaErrorStr(getLastEnigmaError()));
+        return -1;
     }
-    input[strcspn(input, "\n")] = 0;
-    return input;
+
+    bool run = true;
+    while(run) {
+        puts("\n======== CURRENT ENIGMA SETTINGS ========");
+        printf("Plugboard connection:\t ");
+        printPlugboardConnections(enigma);
+        printf("\nRotor names: \t\t %s %s %s\n", enigma->rotors[0].name, enigma->rotors[1].name, enigma->rotors[2].name);
+        printf("Rotor positions:\t %c %c %c\n", 'A' + enigma->rotors[0].rotorPosition, 'A' + enigma->rotors[1].rotorPosition, 'A' + enigma->rotors[2].rotorPosition);
+        printf("Rotor ring pos.:\t %c %c %c\n", 'A' + enigma->rotors[0].ringPosition, 'A' + enigma->rotors[1].ringPosition, 'A' + enigma->rotors[2].ringPosition);
+
+        puts("\n============= ENIGMA OPTIONS =============");
+        puts("(a)..........Enigma encryption\n(b)..........Enigma decryption\n(c)..........Enigma create\n(x)..........Enigma exit\n");
+
+        char choice = getchar();
+        int c;
+        while((c = getchar()) != '\n' && c != EOF);
+
+        switch(choice) {
+        case 'a':
+            puts("\n=================\nEnigma encryption\n=================\n");
+            puts("Input text to encrypt:");
+            while((c = getchar()) != '\n' && c != EOF) {
+                char ec = enigmaEncChar(enigma, c);
+                if(ec == 0) {
+                    fprintf(stderr, "\nError: %s\nReturning to main menu.", getEnigmaErrorStr(getLastEnigmaError()));
+                    break;
+                }
+                printf("%c", ec);
+            }
+            puts("");
+            break;
+        case 'b':
+            puts("\n=================\nEnigma decryption\n=================\n");
+            puts("Input text to decrypt:");
+            while((c = getchar()) != '\n' && c != EOF) {
+                char dc = enigmaEncChar(enigma, c);
+                if(dc == 0) {
+                    fprintf(stderr, "\nError: %s\nReturning to main menu.", getEnigmaErrorStr(getLastEnigmaError()));
+                    break;
+                }
+                printf("%c", dc);
+            }
+            puts("");
+            break;
+        case 'c':
+            Enigma * tmpEnigma;
+            size_t len;
+            size_t rLen;
+
+            puts("\n===============\nEnigma Settings\n===============\n");
+            puts("Insert Plugboard Connections in form: 'AB CD EF GH IJ KL'.");
+            len = (CONNECTIONS_COUNT * 2 + CONNECTIONS_COUNT) * sizeof(char) * 2;
+            char *conn = (char *)malloc(len);
+            if(conn == NULL) {
+                free(conn);
+                fputs("Error with reading plugboard connections\nReturning to main menu.", stderr);
+                break;
+            }
+            if(fgets(conn, len, stdin) == NULL) {
+                free(conn);
+                fputs("Error with reading plugboard connections\nReturning to main menu.", stderr);
+                break;
+            }
+            rLen = strcspn(conn, "\n");
+            conn[rLen] = 0;
+            if(rLen == len - 1) while((c = getchar()) != '\n' && c != EOF);
+
+            puts("Insert 3 Rotors. You can choose from I, II, III, IV, V. Form is: 'I IV V'.");
+            len = (ROTOR_COUNT * 3 + ROTOR_COUNT) * sizeof(char) * 2;
+            char *rot = (char *)malloc(len);
+            if(rot == NULL) {
+                free(conn);
+                free(rot);
+                fputs("Error with reading rotors\nReturning to main menu.", stderr);
+                break;
+            }
+            if(fgets(rot, len, stdin) == NULL) {
+                free(conn);
+                free(rot);
+                fputs("Error with reading rotors\nReturning to main menu.", stderr);
+                break;
+            }
+            rLen = strcspn(rot, "\n");
+            rot[rLen] = 0;
+            if(rLen == len - 1) while((c = getchar()) != '\n' && c != EOF);
+
+            puts("Insert Position of 3 rotors. You can choose from A - Z. Form is: 'A B C'.");
+            len = (ROTOR_COUNT + ROTOR_COUNT) * sizeof(char) * 2;
+            char *rotPos = (char *)malloc(len);
+            if(rotPos == NULL) {
+                free(conn);
+                free(rot);
+                free(rotPos);
+                fputs("Error with reading rotor positions\nReturning to main menu.", stderr);
+                break;
+            }
+            if(fgets(rotPos, len, stdin) == NULL) {
+                free(conn);
+                free(rot);
+                free(rotPos);
+                fputs("Error with reading rotor positions\nReturning to main menu.", stderr);
+                break;
+            }
+            rLen = strcspn(rotPos, "\n");
+            rotPos[rLen] = 0;
+            if(rLen == len - 1) while((c = getchar()) != '\n' && c != EOF);
+
+            puts("Insert Ring Position of 3 rotors. You can choose from A - Z. Form is: 'A B C'.");
+            len = (ROTOR_COUNT * 3 + ROTOR_COUNT) * sizeof(char) * 2;
+            char *rotRingPos = (char *)malloc(len);
+            if(rotRingPos == NULL) {
+                free(conn);
+                free(rot);
+                free(rotPos);
+                free(rotRingPos);
+                fputs("Error with reading ring positions\nReturning to main menu.", stderr);
+                break;
+            }
+            if(fgets(rotRingPos, len, stdin) == NULL) {
+                free(conn);
+                free(rot);
+                free(rotPos);
+                free(rotRingPos);
+                fputs("Error with reading ring positions\nReturning to main menu.", stderr);
+                break;
+            }
+            rLen = strcspn(rotRingPos, "\n");
+            rotRingPos[rLen] = 0;
+            if(rLen == len - 1) while((c = getchar()) != '\n' && c != EOF);
+
+            tmpEnigma = enigmaInit(conn, rot, rotPos, rotRingPos);
+            free(conn);
+            free(rot);
+            free(rotPos);
+            free(rotRingPos);
+            if(tmpEnigma == NULL) {
+                fprintf(stderr, "\nError: %s\nReturning to main menu.", getEnigmaErrorStr(getLastEnigmaError()));
+                break;
+            }
+            enigmaFree(enigma);
+            enigma = tmpEnigma;
+            break;
+        case 'x':
+            puts("============= Goodbye. =============");
+            run = false;
+            break;
+        default:
+            puts("\n!#=========== Wrong option. ===========#!\n");
+        }
+    }
+
+    enigmaFree(enigma);
+
+    return 0;
 }
 
 void printPlugboardConnections(Enigma *enigma) {
@@ -32,116 +180,4 @@ void printPlugboardConnections(Enigma *enigma) {
             alreadyPrinted[substitution] = 1;
         }
     }
-}
-
-int main() {
-    Enigma *enigma = NULL;
-    char *input = malloc(sizeof(char) * 1005);
-    char *enigmaPlugboardConnectionSetting = malloc(strlen("AB CD EF GH IJ KL") + 1);
-    char *enigmaRotorsNameSetting = malloc(strlen("I II III") + 1);
-    char *enigmaRotorPositionSetting = malloc(strlen("J V Z") + 1);
-    char *enigmaRingPositionSetting = malloc(strlen("L X O") + 1);
-    char output[1000];
-
-    strcpy(enigmaPlugboardConnectionSetting, "AB CD EF GH IJ KL");
-    strcpy(enigmaRotorsNameSetting, "I II III");
-    strcpy(enigmaRotorPositionSetting, "J V Z");
-    strcpy(enigmaRingPositionSetting, "L X O");
-
-    for(;;) {
-        if(enigma == NULL) {
-            enigma = enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting);
-            if(enigma == NULL) {
-                fprintf(stderr, getEnigmaErrorStr(getLastEnigmaError()));
-                goto freeMemory;
-            }
-        }
-        
-        puts("\n======== CURRENT ENIGMA SETTINGS ========");
-        printf("Plugboard connection:\t ");
-        printPlugboardConnections(enigma);
-        printf("\nRotor names: \t\t %s %s %s\n", enigma->rotors[0].name, enigma->rotors[1].name, enigma->rotors[2].name);
-        printf("Rotor positions:\t %c %c %c\n", 'A' + enigma->rotors[0].rotorPosition, 'A' + enigma->rotors[1].rotorPosition, 'A' + enigma->rotors[2].rotorPosition);
-        printf("Rotor ring pos.:\t %c %c %c\n", 'A' + enigma->rotors[0].ringPosition, 'A' + enigma->rotors[1].ringPosition, 'A' + enigma->rotors[2].ringPosition);
-
-        puts("\n============= ENIGMA OPTIONS =============");
-        puts("(a)..........Enigma encryption\n(b)..........Enigma decryption\n(s)..........Enigma settings\n(x)..........Enigma exit\n");
-        input = ReadInput(input);
-
-        switch(input[0]) {
-        case 'a':
-            puts("\n=================\nEnigma encryption\n=================\n");
-            puts("Input text to encrypt [max. 1000 symbols]:");
-            if(enigmaEncStr(enigma, ReadInput(input), output) != 0) {
-                fprintf(stderr, "Error: %s", getEnigmaErrorStr(getLastEnigmaError()));
-                fprintf(stdout, "\nReturning to main menu.\n");
-                break;
-            }
-            fprintf(stdout, "Encrypted text is: %s\n\n", output);
-            break;
-        case 'b':
-            puts("\n=================\nEnigma decryption\n=================\n");
-            puts("Input text to decrypt [max. 1000 symbols]:");
-            if(enigmaEncStr(enigma, ReadInput(input), output) != 0) {
-                fprintf(stderr, "Error: %s", getEnigmaErrorStr(getLastEnigmaError()));
-                fprintf(stdout, "\nReturning to main menu.\n");
-                break;
-            }
-            fprintf(stdout, "Decrypted text is: %s\n\n", output);
-            break;
-        case 's':
-            Enigma * tmpEnigma;
-            puts("\n===============\nEnigma Settings\n===============\n");
-            puts("Insert Plugboard Connections in form: 'AB CD EF GH IJ KL'.");
-            input = ReadInput(input);
-            if(input[0] != '\0') {
-                enigmaPlugboardConnectionSetting = allocateSettingChars(enigmaPlugboardConnectionSetting, input);
-            }
-            else fprintf(stdout, "Skipping plugboard settings.\n\n");
-            puts("Insert 3 Rotors. You can choose from I, II, III, IV, V. Form is: 'I IV V'.");
-            input = ReadInput(input);
-            if(input[0] != '\0') {
-                enigmaRotorsNameSetting = allocateSettingChars(enigmaRotorsNameSetting, input);
-            }
-            else fprintf(stdout, "Skipping rotor name settings.\n\n");
-
-            puts("Insert Position of 3 rotors. You can choose from A - Z. Form is: 'A B C'.");
-            input = ReadInput(input);
-            if(input[0] != '\0') {
-                enigmaRotorPositionSetting = allocateSettingChars(enigmaRotorPositionSetting, input);
-            }
-            else fprintf(stdout, "Skipping rotor position settings.\n\n");
-
-            puts("Insert Ring Position of 3 rotors. You can choose from A - Z. Form is: 'A B C'.");
-            input = ReadInput(input);
-            if(input[0] != '\0') {
-                enigmaRingPositionSetting = allocateSettingChars(enigmaRingPositionSetting, input);
-            }
-            else fprintf(stdout, "Skipping ring position settings.\n\n");
-            tmpEnigma = enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting);
-            if(tmpEnigma == NULL) {
-                fprintf(stderr, "\nError: %s\nReturning to main menu.", getEnigmaErrorStr(getLastEnigmaError()));
-                free(tmpEnigma);
-                break;
-            }
-            enigmaFree(tmpEnigma);
-            enigma = enigmaInit(enigmaPlugboardConnectionSetting, enigmaRotorsNameSetting, enigmaRotorPositionSetting, enigmaRingPositionSetting);
-            break;
-        case 'x':
-            puts("============= Goodbye. =============");
-            goto freeMemory;
-        default:
-            puts("\n!#=========== Wrong option. ===========#!\n");
-        }
-    }
-
-freeMemory:
-    free(input);
-    free(enigmaPlugboardConnectionSetting);
-    free(enigmaRotorsNameSetting);
-    free(enigmaRotorPositionSetting);
-    free(enigmaRingPositionSetting);
-    enigmaFree(enigma);
-
-    return 0;
 }
