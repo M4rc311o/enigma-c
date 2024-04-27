@@ -56,6 +56,7 @@ int main() {
                 goto freeMemory;
             }
         }
+        
         puts("\n======== CURRENT ENIGMA SETTINGS ========");
         printf("Plugboard connection:\t ");
         printPlugboardConnections(enigma);
