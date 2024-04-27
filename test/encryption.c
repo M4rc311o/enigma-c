@@ -14,7 +14,7 @@ void encryptionCharTest() {
     }
 }
 
-void encryptionEmptyChar() {
+void encryptionInvalidChar() {
     Enigma *enigma = enigmaInit("AB CD EF GH IJ KL", "I II III", "A B C", "G H I");
     CU_ASSERT_FALSE(enigmaEncChar(enigma, '%'));
     CU_ASSERT_EQUAL(getLastEnigmaError(), ENIGMA_ENC_CHAR_NOT_ALPHA);
@@ -48,7 +48,7 @@ CU_ErrorCode encryptionSuiteFunction() {
         return CU_get_error();
     }
 
-    if(CU_add_test(encryptionSuite, "Empty character encryption test", encryptionEmptyChar) == NULL) {
+    if(CU_add_test(encryptionSuite, "Invalid character encryption test", encryptionInvalidChar) == NULL) {
         CU_cleanup_registry();
         return CU_get_error();
     }
