@@ -81,18 +81,18 @@ Enigma *enigmaInit(char *plugboardConnections, char *rotorsNames, char *rotorsPo
     if(enigma == NULL)
         return NULL;
     if(plugboardInit(&enigma->plugboard, plugboardConnections)) {
-        enigmaFree(enigma);
+        free(enigma);
         return NULL;
     }
     if(rotorsInit(enigma->rotors, rotorsNames, rotorsPosition, ringsPosition)) {
-        enigmaFree(enigma);
+        free(enigma);
         return NULL;
     }
 
     // Reflector B
     enigma->reflector.name = reflectorNames[1];
     if(reflectorInit(&enigma->reflector, reflectorAlphabets[1])) {
-        enigmaFree(enigma);
+        free(enigma);
         return NULL;
     }
 
@@ -193,7 +193,6 @@ ENIGMA_ERROR rotorsInit(Rotor rotors[], char *rotorsNames, char *rotorsPositons,
     if(tmpRotor == NULL || tmpRotorP == NULL || tmpRingP == NULL) {
         lastEnigmaError = ENIGMA_UNSUCCESSFUL_MEM_ALLOCATION;
         return lastEnigmaError;
-
     }
 
     strcpy(tmpRotor, rotorsNames);

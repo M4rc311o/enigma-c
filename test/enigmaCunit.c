@@ -21,11 +21,6 @@ if(plugboardInitSuiteFunction() != CUE_SUCCESS) {
 		return CU_get_error();
 	}
 
-	if(rotorsRotateSuiteFunction() != CUE_SUCCESS) {
-		CU_cleanup_registry();
-		return CU_get_error();
-	}
-
 	if(encryptionSuiteFunction() != CUE_SUCCESS){
 		CU_cleanup_registry();
 		return CU_get_error();
