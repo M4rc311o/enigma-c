@@ -215,16 +215,25 @@ ENIGMA_ERROR rotorsInit(Rotor rotors[], char *rotorsNames, char *rotorsPositons,
         selectedAlphabet = NULL;
 
         if(numOfRotor > ROTOR_COUNT) {
+            free(tmpRotor);
+            free(tmpRotorP);
+            free(tmpRingP);
             lastEnigmaError = ENIGMA_ROTORS_TOO_MANY_ROTORS;
             return lastEnigmaError;
         }
 
         if(rotorP == NULL) {
+            free(tmpRotor);
+            free(tmpRotorP);
+            free(tmpRingP);
             lastEnigmaError = ENIGMA_ROTORS_TOO_FEW_ROTOR_POSITIONS;
             return lastEnigmaError;
         }
 
         if(ringP == NULL) {
+            free(tmpRotor);
+            free(tmpRotorP);
+            free(tmpRingP);
             lastEnigmaError = ENIGMA_ROTORS_TOO_FEW_RING_POSITIONS;
             return lastEnigmaError;
         }
@@ -236,6 +245,9 @@ ENIGMA_ERROR rotorsInit(Rotor rotors[], char *rotorsNames, char *rotorsPositons,
         for(int i = 0; i < AVAILABLE_ROTORS; i++) {
             if(strcmp(rotor, rotorNames[i]) == 0) {
                 if(usedRotor[i]) {
+                    free(tmpRotor);
+                    free(tmpRotorP);
+                    free(tmpRingP);
                     lastEnigmaError = ENIGMA_ROTORS_ROTOR_ALREADY_USED;
                     return lastEnigmaError;
                 }
@@ -248,16 +260,25 @@ ENIGMA_ERROR rotorsInit(Rotor rotors[], char *rotorsNames, char *rotorsPositons,
         }
 
         if(selectedAlphabet == NULL) {
+            free(tmpRotor);
+            free(tmpRotorP);
+            free(tmpRingP);
             lastEnigmaError = ENIGMA_ROTORS_ROTOR_NAME_NOT_FOUND;
             return lastEnigmaError;
         }
 
         if(!isalpha(rotorP[0]) || strlen(rotorP) != 1) {
+            free(tmpRotor);
+            free(tmpRotorP);
+            free(tmpRingP);
             lastEnigmaError = ENIGMA_ROTORS_INVALID_ROTOR_POSITION;
             return lastEnigmaError;
         }
 
         if(!isalpha(ringP[0]) || strlen(ringP) != 1) {
+            free(tmpRotor);
+            free(tmpRotorP);
+            free(tmpRingP);
             lastEnigmaError = ENIGMA_ROTORS_INVALID_RING_POSITION;
             return lastEnigmaError;
         }
@@ -270,6 +291,9 @@ ENIGMA_ERROR rotorsInit(Rotor rotors[], char *rotorsNames, char *rotorsPositons,
     }
 
     if(numOfRotor != ROTOR_COUNT) {
+        free(tmpRotor);
+        free(tmpRotorP);
+        free(tmpRingP);
         lastEnigmaError = ENIGMA_ROTORS_TOO_FEW_ROTORS;
         return lastEnigmaError;
     }
