@@ -381,8 +381,8 @@ char enigmaEncChar(Enigma *enigma, char ch) {
 
 ENIGMA_ERROR enigmaEncStr(Enigma *enigma, char input[], char encrypted[]) {
     int j = 0;
-    int input_lenght = strlen(input);
-    for(int i = 0; i < input_lenght; i++) {
+    int inputLenght = strlen(input);
+    for(int i = 0; i < inputLenght; i++) {
         if(input[i] != ' ') {
             encrypted[j] = enigmaEncChar(enigma, input[i]);
             if(encrypted[j] == 0) {
