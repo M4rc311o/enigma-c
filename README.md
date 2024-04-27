@@ -9,10 +9,11 @@ Pro jednotlivé funkce byly vytvořeny odpovídající jednotkové testy ověřu
 Uživatel má možnost šifrovat, dešifrovat daný vstup. Další možností je změna počátečního nastavení Enigmy, které je následující:
 1. Výběr rotorů – uživatel zvolí 3 rotory z nabídky 5 dostupných
 2. Nastavení počáteční pozice rotoru
-3. Nastavení počáteční pozice prstence
+3. Nastavení počáteční pozice vnitřního kroužku rotoru
+
 Uživateli je následně zobrazeno nastavení Enigmy a v případě, že došlo k chybovému stavu, je o něm informován. 
 
-
+## Odkazy
 - [Enigma settings format example](https://www.101computing.net/enigma-daily-settings-generator/)
 - [Online enigma example](https://cryptii.com/pipes/enigma-machine)
 - [Online enigma exmaple with available internal structure](https://people.physik.hu-berlin.de/~palloks/js/enigma/enigma-u_v262_en.html)
