@@ -190,9 +190,11 @@ ENIGMA_ERROR rotorsInit(Rotor rotors[], char *rotorsNames, char *rotorsPositons,
     char *tmpRingP = (char *)malloc(ringPlength * sizeof(char));
 
     if(tmpRotor == NULL || tmpRotorP == NULL || tmpRingP == NULL) {
+        free(tmpRotor);
+        free(tmpRotorP);
+        free(tmpRingP);
         lastEnigmaError = ENIGMA_UNSUCCESSFUL_MEM_ALLOCATION;
         return lastEnigmaError;
-
     }
 
     strcpy(tmpRotor, rotorsNames);
