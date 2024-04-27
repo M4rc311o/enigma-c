@@ -10,12 +10,15 @@ void encryptionCharTest() {
     for(int x = 0;x < (sizeof(input) - 1);x++) {
         Enigma *enigma = enigmaInit("AB CD EF GH IJ KL", "I II III", "A B C", "G H I");
         CU_ASSERT_EQUAL(enigmaEncChar(enigma, input[x]), expected[x]);
-        free(enigma);
+        enigmaFree(enigma);
     }
+}
 
+void encryptionEmptyChar() {
     Enigma *enigma = enigmaInit("AB CD EF GH IJ KL", "I II III", "A B C", "G H I");
-    CU_ASSERT_EQUAL(enigmaEncChar(enigma, ' '), ENIGMA_ENC_CHAR_NOT_ALPHA);
-    free(enigma);
+    CU_ASSERT_FALSE(enigmaEncChar(enigma, '%'));
+    CU_ASSERT_EQUAL(getLastEnigmaError(), ENIGMA_ENC_CHAR_NOT_ALPHA);
+    enigmaFree(enigma);
 }
 
 void encryptionStrTest() {
@@ -27,7 +30,7 @@ void encryptionStrTest() {
     for(int x = 0;x < sizeof(input);x++) {
         CU_ASSERT_EQUAL(encrypted[x], expected[x]);
     }
-    free(enigma);
+    enigmaFree(enigma);
 }
 
 
@@ -41,6 +44,11 @@ CU_ErrorCode encryptionSuiteFunction() {
     }
 
     if(CU_add_test(encryptionSuite, "Character encryption test", encryptionCharTest) == NULL) {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    if(CU_add_test(encryptionSuite, "Empty character encryption test", encryptionEmptyChar) == NULL) {
         CU_cleanup_registry();
         return CU_get_error();
     }
