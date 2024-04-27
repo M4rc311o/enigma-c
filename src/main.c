@@ -52,7 +52,7 @@ int main() {
                 char dc = enigmaEncChar(enigma, c);
                 if(dc == 0) {
                     while((c = getchar()) != '\n' && c != EOF);
-                    fprintf(stderr, "\nError: %s\nReturning to main menu.", getEnigmaErrorStr(getLastEnigmaError()));
+                    fprintf(stderr, "\nError: %s\nReturning to main menu.\n", getEnigmaErrorStr(getLastEnigmaError()));
                     break;
                 }
                 printf("%c", dc);
