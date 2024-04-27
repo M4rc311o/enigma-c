@@ -157,6 +157,7 @@ ENIGMA_ERROR plugboardInit(Plugboard *plugboard, char *plugboardConnections) {
     }
 
     if(connectionCount != CONNECTIONS_COUNT) {
+        free(tmpStr);
         lastEnigmaError = ENIGMA_PLUGBOARD_TOO_FEW_CONNECTIONS;
         return lastEnigmaError;
     }
