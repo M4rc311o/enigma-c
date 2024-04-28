@@ -10,7 +10,7 @@ Po spuštění aplikace je uživateli zobrazeno defaultní nastavení Enigmy a p
 
 **Šifrování a dešifrování**
 
-V případě šifrování uživatel zadá do terminálu vstup obsahující pouze abecední znaky bez diakritiky. Při zadávání textu nezáleží na použití velkých a malých písmen. Jakékoliv jiné znaky, včetně interpunkčních znamének a mezer, způsobí výpis chybové hlášky. 
+V případě šifrování či dešifrování uživatel zadá do terminálu vstup obsahující pouze abecední znaky bez diakritiky. Při zadávání textu nezáleží na použití velkých a malých písmen. Jakékoliv jiné znaky, včetně interpunkčních znamének a mezer, způsobí výpis chybové hlášky. 
 
 **Změna nastavení Enigmy**
 
