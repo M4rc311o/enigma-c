@@ -9,9 +9,11 @@ Pro jednotlivé funkce byly vytvořeny odpovídající jednotkové testy ověřu
 Po spuštění aplikace je uživateli zobrazeno defaultní nastavení Enigmy a prostřednictvím terminálu je vyzván k výběru jedné z nabízených funkcionalit programu, kterými je šifrování, dešifrování a změna nastavení Enigmy. Svou volbu provede zadáním příslušného vstupu z klávesnice. 
 
 **Šifrování a dešifrování**
+
 V případě šifrování zadejte do terminálu vstup obsahující pouze abecední znaky bez diakritiky. Při zadávání textu nezáleží na použití velkých a malých písmen. Jakékoliv jiné znaky, včetně interpunkčních znamének a mezer, způsobí výpis chybové hlášky. 
 
 **Změna nastavení Enigmy**
+
 Uživatel má možnost změnit počáteční nastavení plugboardu, vybrat 3 z nabídky 5 dostupných rotorů, startovní pozici rotoru a pozici vnitřního kroužku rotoru. 
 Proces je následujicí:
 
