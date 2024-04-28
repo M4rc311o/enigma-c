@@ -18,9 +18,9 @@ Uživatel má možnost změnit počáteční nastavení plugboardu, vybrat 3 z n
 Proces je následujicí:
 
 1. Pro změnu zapojení plugboardu je nezbytné zadat 6 dvojic pouze abecedních znaků oddělených mezerami. Pořadí znaků ve dvojici určuje, odkud kam bude písmeno mapováno.
-2. Výběr rotorů je proveden zadáním římské číslice z rozsahu I až V
-3. Změna nastavení počáteční pozice pro vybrané rotory proběhne zadáním příslušných abecedních znaků
-4. Změna nastavení počáteční pozice vnitřního kroužku jednotlivých rotorů proběhne analogicky jako v předchozím případě
+2. Výběr rotorů je proveden zadáním římské číslice z rozsahu I až V.
+3. Změna nastavení počáteční pozice pro vybrané rotory proběhne zadáním příslušných abecedních znaků.
+4. Změna nastavení počáteční pozice vnitřního kroužku jednotlivých rotorů proběhne analogicky jako v předchozím případě.
 
 Přeskočení nastavení dané komponenty lze provést stiskem klávesy *Enter*. V tomto případě bude použito defaultní nastavení Enigmy. Jestliže bude zadán chybný vstup, bude uživatel informován prostřednictvím výpisu v terminálu.
 
