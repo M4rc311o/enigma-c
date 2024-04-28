@@ -416,23 +416,6 @@ char enigmaEncChar(Enigma *enigma, char ch) {
     return encCh + 'A';
 }
 
-ENIGMA_ERROR enigmaEncStr(Enigma *enigma, char input[], char encrypted[]) {
-    int j = 0;
-    int inputLenght = strlen(input);
-    for(int i = 0; i < inputLenght; i++) {
-        if(input[i] != ' ') {
-            encrypted[j] = enigmaEncChar(enigma, input[i]);
-            if(encrypted[j] == 0) {
-                return lastEnigmaError;
-            }
-            j++;
-        }
-    }
-    encrypted[j] = '\0';
-    lastEnigmaError = ENIGMA_SUCCESS;
-    return ENIGMA_SUCCESS;
-}
-
 char *strToUpper(char *str) {
     for(int c = 0; str[c] != 0; c++) {
         str[c] = toupper(str[c]);
