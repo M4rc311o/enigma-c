@@ -1,18 +1,18 @@
 # Enigma
-Tento projekt vznikl v rámci předmětu BPC-VBA. Naším cílem bylo vytvořit program v jazyce C simulující šifrovací stroj Enigma. 
+Tento projekt vznikl v rámci předmětu BPC-VBA. Naším cílem bylo vytvořit program v jazyce C simulující šifrovací stroj Enigma.
 ## Struktura kódu
-Kód je členěn do několika logických sektorů. Nejprve jsou inicializovány jednotlivé komponenty - plugboard, rotory a reflektor. Plugboard umožňuje manuální změnu mapování jednotlivých písmen. Rotory jsou 3 a pro každý z nich je definována substituce pro průchod šifrovaného znaku v obou směrech. Reflektor přijímá výstup z posledního rotoru a připraví jej pro zpětný průchod rotory. Hodnoty jednotlivých proměnných jsou uloženy v příslušných strukturách, které jsou definovány v souboru [enigma.h](https://ntb-2919-01s.utko.feec.vutbr.cz/bpc-vba/247568/enigma/-/blob/main/inc/enigma.h?ref_type=heads). Následují funkce pro samotné šifrování. Jejich princip je obdobný, jedním z parametrů je vždy šifrované písmeno, které je patřičně substituováno. Jednotlivé kroky šifrování propojuje funkce *enigmaEncChar*. Znak je nejprve odeslán do plugboardu, následuje průchod rotory, reflektorem a opět se vrací přes rotory do plugboardu. Vstup, který má být šifrován či dešifrován je od uživatele přijímán v podobě textového řetězce, který je postupně procházen znak po znaku. Při každé iteraci je pak volána výše uvedená funkce *enigmaEncChar*.
+Kód je členěn do několika logických sektorů. Nejprve jsou inicializovány jednotlivé komponenty - plugboard, rotory a reflektor. Plugboard umožňuje manuální změnu mapování jednotlivých písmen. Rotory jsou 3 a pro každý z nich je definována substituce pro průchod šifrovaného znaku v obou směrech. Reflektor přijímá výstup z posledního rotoru a připraví jej pro zpětný průchod rotory. Hodnoty jednotlivých proměnných jsou uloženy v příslušných strukturách, které jsou definovány v souboru [enigma.h](inc/enigma.h). Následují funkce pro samotné šifrování. Jejich princip je obdobný, jedním z parametrů je vždy šifrované písmeno, které je patřičně substituováno. Jednotlivé kroky šifrování propojuje funkce `enigmaEncChar()`. Znak je nejprve odeslán do plugboardu, následuje průchod rotory, reflektorem a opět se vrací přes rotory do plugboardu.
 
 Pro jednotlivé funkce byly vytvořeny odpovídající jednotkové testy ověřující správnou funkčnost kódu.
 
 ## Funkcionality
-Po spuštění aplikace je uživateli zobrazeno defaultní nastavení Enigmy a prostřednictvím terminálu je vyzván k výběru jedné z nabízených funkcionalit programu, kterými je šifrování, dešifrování a změna nastavení Enigmy. Svou volbu provede zadáním příslušného vstupu z klávesnice. 
+Po spuštění aplikace je uživateli zobrazeno defaultní nastavení Enigmy a prostřednictvím terminálu je vyzván k výběru jedné z nabízených funkcionalit programu, kterými je šifrování, dešifrování a vytvoření nové Enigmy. Svou volbu provede zadáním příslušného vstupu z klávesnice. 
 
 **Šifrování a dešifrování**
 
 V případě šifrování či dešifrování uživatel zadá do terminálu vstup obsahující pouze abecední znaky bez diakritiky. Při zadávání textu nezáleží na použití velkých a malých písmen. Jakékoliv jiné znaky, včetně interpunkčních znamének a mezer, způsobí výpis chybové hlášky. 
 
-**Změna nastavení Enigmy**
+**Vytvoření nové Enigmy**
 
 Uživatel má možnost změnit počáteční nastavení plugboardu, vybrat 3 z nabídky 5 dostupných rotorů, startovní pozici rotoru a pozici vnitřního kroužku rotoru. 
 Proces je následujicí:
@@ -22,7 +22,7 @@ Proces je následujicí:
 3. Změna nastavení počáteční pozice pro vybrané rotory proběhne zadáním příslušných abecedních znaků, které budou odděleny mezerami.
 4. Změna nastavení počáteční pozice vnitřního kroužku jednotlivých rotorů proběhne analogicky jako v předchozím případě.
 
-Přeskočení nastavení dané komponenty lze provést stiskem klávesy *Enter*. V tomto případě bude použito defaultní nastavení Enigmy. Jestliže bude zadán chybný vstup, bude uživatel informován prostřednictvím výpisu v terminálu.
+Jestliže bude zadán chybný vstup, bude uživatel informován prostřednictvím výpisu v terminálu.
 
 
 ## Odkazy
